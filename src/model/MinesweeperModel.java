@@ -34,21 +34,6 @@ public class MinesweeperModel {
 				mineSweepBoard[rows][cols] = new MinesweeperCell(i,j);
 			}
 		}
-		
-//		Random randRow = new Random();
-//		Random randCol = new Random();
-//		for(int mine = 0; mine < mines; mine++) {
-//			int mineRow = randRow.nextInt(rows);
-//			int mineCol = randCol.nextInt(cols);
-//			while(!isMine(mineRow,mineCol)) {
-//				mineRow = randRow.nextInt(rows);
-//				mineCol = randCol.nextInt(cols);
-//			}
-//			mineSweepBoard[mineRow][mineCol].setMine(true);
-//			bombsArray.add(mineSweepBoard[mineRow][mineCol]);
-//			updateAdjacentBombs(mineRow,mineCol);
-//			
-//		}	
 	}
 	
 	public void setBombs(MinesweeperCell firstMove) {

@@ -125,18 +125,6 @@ public class MinesweeperModel {
 		
 	}
 	
-	public void placeBombAt(int row, int col) {
-		bombPlaced[row][col] = 1;
-		
-	}
-	
-	public boolean bombCheck(int row, int col) {
-		if(bombPlaced[row][col] == 1) {
-			return true;
-		}
-		return false;
-	}
-	
 	public int getRow() {
 		return rows;
 	}
@@ -148,55 +136,7 @@ public class MinesweeperModel {
 	public int countOfMines() {
 		return mines;
 	}
-	
-	public void placeBombRandom(int row, int col, int bombs) {
-		Random rand = new Random();
-		int i = 0;
-		while(i < bombs) {
-			int randomRow = rand.nextInt(gridR);
-			int randomCol = rand.nextInt(gridC);
-			if(randomRow == fClickRow && randomCol == fClickCol) {
-				continue;
-			}
-			if(bombCheck(randomRow, randomCol)) {
-				continue;
-			}
-			placeBombAt(randomRow, randomCol);
-			i++;
-		}
 		
-		
-	}
-	
-	public void userMark(int row, int col) {
-		bombMarked[row][col] = 1;
-		mark++;
-
-	}
-	
-	public void userUnmark(int row, int col) {
-		bombMarked[row][col] = 0;
-		mark--;
-	}
-	
-	public boolean checkGameComplete() {
-		if(mines == mark) {
-			for(int i =0 ; i< gridR; i++) {
-				for(int j= 0; j< gridC; j++) {
-					if(bombPlaced[i][j] == 1) {
-						if(bombMarked[i][j] != 1) {
-							return false;
-						}
-					}
-				}
-			}
-		}
-		else {
-			return false;
-		}
-		return true;
-	}
-	
 	public MinesweeperCell getCell(int row, int col) {
 		return mineSweepBoard[row][col];
 	}

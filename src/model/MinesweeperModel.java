@@ -1,10 +1,13 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class MinesweeperModel {
 	//Needs to be added
 	private MinesweeperCell[][] mineSweepBoard;
+	private ArrayList<MinesweeperCell> bombsArray;
+	//private MinesweeperCell[] bombsArray;
 	private int rows;
 	private int cols;
 	private int mines;
@@ -24,26 +27,49 @@ public class MinesweeperModel {
 		this.rows = rows;
 		this.cols = cols;
 		this.mines = mines;
+		bombsArray = new ArrayList<MinesweeperCell>();
 		mineSweepBoard = new MinesweeperCell[rows][cols];
 		for(int i = 0; i< rows; i++) {
 			for(int j = 0; j < cols; j++) {
-				mineSweepBoard[rows][cols] = new MinesweeperCell();
+				mineSweepBoard[rows][cols] = new MinesweeperCell(i,j);
 			}
 		}
 		
+//		Random randRow = new Random();
+//		Random randCol = new Random();
+//		for(int mine = 0; mine < mines; mine++) {
+//			int mineRow = randRow.nextInt(rows);
+//			int mineCol = randCol.nextInt(cols);
+//			while(!isMine(mineRow,mineCol)) {
+//				mineRow = randRow.nextInt(rows);
+//				mineCol = randCol.nextInt(cols);
+//			}
+//			mineSweepBoard[mineRow][mineCol].setMine(true);
+//			bombsArray.add(mineSweepBoard[mineRow][mineCol]);
+//			updateAdjacentBombs(mineRow,mineCol);
+//			
+//		}	
+	}
+	
+	public void setBombs(MinesweeperCell firstMove) {
 		Random randRow = new Random();
 		Random randCol = new Random();
 		for(int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while(!isMine(mineRow,mineCol)) {
+			while(!isMine(mineRow,mineCol) && !mineSweepBoard[mineRow][mineCol].equals(firstMove)) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
 			}
 			mineSweepBoard[mineRow][mineCol].setMine(true);
+			bombsArray.add(mineSweepBoard[mineRow][mineCol]);
 			updateAdjacentBombs(mineRow,mineCol);
 			
-		}	
+		}
+	}
+	
+	public ArrayList<MinesweeperCell> getBombs() {
+		return bombsArray;
 	}
 	
 	public MinesweeperCell[][] getBoard() {
@@ -172,7 +198,7 @@ public class MinesweeperModel {
 	}
 	
 	public MinesweeperCell getCell(int row, int col) {
-		return null;
+		return mineSweepBoard[row][col];
 	}
 	
 

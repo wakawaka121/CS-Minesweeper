@@ -6,12 +6,16 @@ public class MinesweeperCell {
 	private boolean mined;
 	private boolean flagged;
 	private int adjacentMines;
+	private int rowCord;
+	private int colCord;
 	
-	public MinesweeperCell() {
+	public MinesweeperCell(int row, int col) {
 		hidden = true;
 		mined = false;
 		flagged = false;
 		adjacentMines = 0;
+		rowCord = row;
+		colCord = col;
 	}
 	
 	public boolean isMined() {
@@ -34,8 +38,8 @@ public class MinesweeperCell {
 		return hidden;
 	}
 	
-	public void setHidden(boolean value) {
-		hidden = value;
+	public void setHidden() {
+		hidden = false;
 	}
 	
 	public boolean isFlagged() {
@@ -48,6 +52,14 @@ public class MinesweeperCell {
 		} else if(flagged == false) {
 			flagged = true;
 		}
+	}
+	
+	public int getRow() {
+		return rowCord;
+	}
+	
+	public int getCol() {
+		return colCord;
 	}
 
 }

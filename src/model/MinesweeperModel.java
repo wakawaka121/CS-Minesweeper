@@ -5,8 +5,8 @@ import java.util.Random;
 public class MinesweeperModel {
 	//Needs to be added
 	private MinesweeperCell[][] mineSweepBoard;
-	int rows;
-	int cols;
+	private int rows;
+	private int cols;
 	private int mines;
 	
 	
@@ -44,6 +44,10 @@ public class MinesweeperModel {
 			updateAdjacentBombs(mineRow,mineCol);
 			
 		}	
+	}
+	
+	public MinesweeperCell[][] getBoard() {
+		return mineSweepBoard;
 	}
 	
 	private void updateAdjacentBombs(int row, int col){
@@ -105,6 +109,14 @@ public class MinesweeperModel {
 			return true;
 		}
 		return false;
+	}
+	
+	public int getRow() {
+		return rows;
+	}
+	
+	public int getCol() {
+		return cols;
 	}
 	
 	public int countOfMines() {

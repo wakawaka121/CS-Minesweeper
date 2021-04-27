@@ -49,23 +49,6 @@ public class MinesweeperController {
 				updateBoard(row, col);
 			}
 		}
-		
-		
-		
-		
-//		if(cellsHidden == model.getRow() * model.getCol()) {
-//			model.setBombs(curMove);
-//			curMove.setHidden();
-//			updateBoard(row,col);
-//		} else if(curMove.isMined()) {
-//			gameOver = true;
-//			//may be need to be moved to the view
-//			showBombs();
-//		}
-//		else {
-//			curMove.setHidden();
-//			updateBoard(row, col);
-//		}
 	}
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array

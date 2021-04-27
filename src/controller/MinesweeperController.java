@@ -18,7 +18,6 @@ public class MinesweeperController {
 		this.model = model;
 		refToBoard = model.getBoard();
 		gameOver = false;
-		mineCount = model.countOfMines();
 		cellsHidden = model.getRow() * model.getCol();
 		flagCount = 0;
 	}
@@ -35,19 +34,38 @@ public class MinesweeperController {
 	
 	public void playMove(int row, int col) {
 		MinesweeperCell curMove = refToBoard[row][col];
-		if(cellsHidden == model.getRow() * model.getCol()) {
-			model.setBombs(curMove);
-			curMove.setHidden();
-			updateBoard(row,col);
-		} else if(curMove.isMined()) {
-			gameOver = true;
-			//may be need to be moved to the view
-			showBombs();
+		if(!curMove.isFlagged() == false) {
+			if(cellsHidden == model.getRow() * model.getCol()) {
+				model.setBombs(curMove);
+				curMove.setHidden();
+				updateBoard(row,col);
+			} else if(curMove.isMined()) {
+				gameOver = true;
+				//may be need to be moved to the view
+				showBombs();
+			}
+			else {
+				curMove.setHidden();
+				updateBoard(row, col);
+			}
 		}
-		else {
-			curMove.setHidden();
-			updateBoard(row, col);
-		}
+		
+		
+		
+		
+//		if(cellsHidden == model.getRow() * model.getCol()) {
+//			model.setBombs(curMove);
+//			curMove.setHidden();
+//			updateBoard(row,col);
+//		} else if(curMove.isMined()) {
+//			gameOver = true;
+//			//may be need to be moved to the view
+//			showBombs();
+//		}
+//		else {
+//			curMove.setHidden();
+//			updateBoard(row, col);
+//		}
 	}
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
@@ -139,6 +157,7 @@ public class MinesweeperController {
 	}
 	
 	public boolean isGameOver() {
+		int mineCount = model.countOfMines();
 		return cellsHidden == mineCount;
 		
 	}

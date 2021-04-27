@@ -4,11 +4,15 @@ import java.util.Random;
 
 public class MinesweeperModel {
 	//Needs to be added
-	private MinesweeperCell[][] cells;
+	private MinesweeperCell[][] mineSweepBoard;
+	int rows;
+	int cols;
+	private int mines;
+	
+	
 	private int[][] gameGrid;
 	private int[][] bombPlaced;
 	private int[][] bombMarked;
-	private int mines;
 	private int gridR;
 	private int gridC;
 	private int fClickRow;
@@ -16,23 +20,74 @@ public class MinesweeperModel {
 	private int mark;
 
 	
-	public MinesweeperModel(int n, int m, int k) {
-		gameGrid = new int[n][m];
-		bombPlaced = new int[n][m];
-		bombMarked = new int[n][m];
-		mines = k;
-		this.gridR = n;
-		this.gridC = m;
-		
-		
-		for(int i =0 ; i< n; i++) {
-			for(int j= 0; j< m; j++) {
-				gameGrid[i][j] = 0;
-				bombPlaced[i][j] =0;
-				bombMarked[i][j] = 0; 
+	public MinesweeperModel(int rows, int cols, int mines) {
+		this.rows = rows;
+		this.cols = cols;
+		this.mines = mines;
+		mineSweepBoard = new MinesweeperCell[rows][cols];
+		for(int i = 0; i< rows; i++) {
+			for(int j = 0; j < cols; j++) {
+				mineSweepBoard[rows][cols] = new MinesweeperCell();
 			}
 		}
 		
+		Random randRow = new Random();
+		Random randCol = new Random();
+		for(int mine = 0; mine < mines; mine++) {
+			int mineRow = randRow.nextInt(rows);
+			int mineCol = randCol.nextInt(cols);
+			while(!isMine(mineRow,mineCol)) {
+				mineRow = randRow.nextInt(rows);
+				mineCol = randCol.nextInt(cols);
+			}
+			mineSweepBoard[mineRow][mineCol].setMine(true);
+			updateAdjacentBombs(mineRow,mineCol);
+			
+		}	
+	}
+	
+	private void updateAdjacentBombs(int row, int col){
+		//NW update
+		if(row-1 >= 0 && col-1 >= 0) {
+			mineSweepBoard[row-1][col-1].increaseMines();
+		}
+		//N update
+		if(row-1 >=0) {
+			mineSweepBoard[row-1][col].increaseMines();
+		}
+		//NE update
+		if(row+1 < rows && col-1 >=0) {
+			mineSweepBoard[row+1][col-1].increaseMines();
+		}
+		//E update
+		if(row+1 < rows) {
+			mineSweepBoard[row+1][col].increaseMines();
+		}
+		//SE update
+		if(row+1 < rows && col+1 < cols) {
+			mineSweepBoard[row+1][col+1].increaseMines();
+		}
+		//S update
+		if(row+1 < rows) {
+			mineSweepBoard[row+1][col].increaseMines();
+		}
+		//SW update
+		if(row+1 < rows && col-1 >= 0) {
+			mineSweepBoard[row+1][col-1].increaseMines();
+		}
+		//W update 
+		if(col-1 >= 0) {
+			mineSweepBoard[row][col-1].increaseMines();
+		}
+		
+	}
+	private boolean isMine(int row, int col) {
+		if(mineSweepBoard[row][col].isMined()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	/*Saveed Game Constructor*/

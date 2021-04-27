@@ -9,9 +9,37 @@ public class MinesweeperCell {
 	
 	public MinesweeperCell() {
 		hidden = true;
-		minded = false;
-		falgged = false;
-		adjcentMines = null;
+		mined = false;
+		flagged = false;
+		adjacentMines = -1;
+	}
+	
+	public boolean isMined() {
+		return mined;
+	}
+	
+	public void setMine(boolean value) {
+		mined = value;
+	}
+	
+	public void increaseMines() {
+		adjacentMines++;
+	}
+	
+	public boolean isHidden() {
+		return hidden;
+	}
+	
+	public void setHidden(boolean value) {
+		hidden = value;
+	}
+	
+	public boolean isFlagged() {
+		return flagged;
+	}
+	
+	public void setFlagged(boolean value) {
+		flagged = value;
 	}
 
 }

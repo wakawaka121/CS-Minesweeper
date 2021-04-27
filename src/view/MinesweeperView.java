@@ -67,7 +67,7 @@ public class MinesweeperView extends Application implements Observer {
 				pane.setBackground(
 						new Background(new BackgroundFill(Color.DARKGRAY, null, null)));
 				Circle circle = new Circle(10);
-				Text text = new Text("5");
+				Text text = new Text();
 				text.setFont(new Font(15));
 				text.setFill(Color.RED);
 				pane.getChildren().add(circle);

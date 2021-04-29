@@ -101,6 +101,9 @@ public class MinesweeperView extends Application implements Observer {
 	}
 
 	private void addStackPanes(GridPane board, int rows, int cols) {
+		panes = new StackPane[rows][cols];
+		texts = new Text[rows][cols];
+		circles = new Circle[rows][cols];
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < rows; j++) {
 				StackPane pane = new StackPane();

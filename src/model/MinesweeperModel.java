@@ -12,15 +12,7 @@ public class MinesweeperModel {
 	private int cols;
 	private int mines;
 	
-	
-	private int[][] gameGrid;
-	private int[][] bombPlaced;
-	private int[][] bombMarked;
-	private int gridR;
-	private int gridC;
-	private int fClickRow;
-	private int fClickCol;
-	private int mark;
+
 
 	
 	public MinesweeperModel(int rows, int cols, int mines) {
@@ -31,7 +23,7 @@ public class MinesweeperModel {
 		mineSweepBoard = new MinesweeperCell[rows][cols];
 		for(int i = 0; i< rows; i++) {
 			for(int j = 0; j < cols; j++) {
-				mineSweepBoard[rows][cols] = new MinesweeperCell(i,j);
+				mineSweepBoard[i][j] = new MinesweeperCell(i,j);
 			}
 		}
 	}

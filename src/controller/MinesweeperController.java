@@ -34,20 +34,18 @@ public class MinesweeperController {
 	
 	public void playMove(int row, int col) {
 		MinesweeperCell  curMove = refToBoard[row][col];
-		if(curMove.isFlagged()) {
+		if(curMove.isHidden()) {
 			if(cellsHidden == model.getRow() * model.getCol()) {
-				model.setBombs(curMove);
-				curMove.setHidden();
-				
+				model.setBombs(row, col);
 				updateBoard(row,col);
+				revealCells(row, col);
 			} else if(curMove.isMined()) {
 				gameOver = true;
-				//may be need to be moved to the view
 				showBombs();
 			}
 			else {
-				curMove.setHidden();
 				updateBoard(row, col);
+				revealCells(row, col);
 			}
 		}
 	}
@@ -55,7 +53,32 @@ public class MinesweeperController {
 	// Reveal all cells after a move is made.
 	// If a cells has 0 mines around it, it will recursively reveal all cells until it stops.
 	private void revealCells(int row, int col) {
-		//
+		if(row < 0 || col < 0 || row >= model.getRow() || col >= model.getCol()) {
+			return;
+		}
+		
+		if(!refToBoard[row][col].isHidden()) {
+			return;
+		}
+		
+		refToBoard[row][col].setHidden();
+		cellsHidden--;
+		
+		if(refToBoard[row][col].getMines() == 0) {
+//			revealCells(row, col - 1);
+//			revealCells(row, col + 1);
+//			revealCells(row - 1, col);
+//			revealCells(row - 1, col - 1);
+//			revealCells(row - 1, col + 1);
+//			revealCells(row + 1, col);
+//			revealCells(row + 1, col - 1);
+//			revealCells(row + 1, col + 1);
+
+			revealCells(row + 1, col);
+			revealCells(row - 1, col);
+			revealCells(row, col + 1);
+			revealCells(row, col - 1);
+		}
 	}
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
@@ -71,7 +94,7 @@ public class MinesweeperController {
 	//and update until bomb found
 	private void updateBoard(int row, int col) {
 		if(row-1 >=0 && col-1 >=0) {
-			moveNW(row-1,col-1);
+			//moveNW(row-1,col-1);
 		}
 		if(row-1 >= 0) {
 			//TODO

@@ -49,7 +49,7 @@ public class MinesweeperView extends Application implements Observer {
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Minesweeper");
-		model = new MinesweeperModel(10, 10, 10);
+		model = new MinesweeperModel(15, 10, 10);
 		control = new MinesweeperController(model);
 		BorderPane window = new BorderPane();
 		GridPane board = new GridPane();
@@ -61,11 +61,53 @@ public class MinesweeperView extends Application implements Observer {
 
 			@Override
 			public void handle(MouseEvent arg0) {
-				// TODO
-
+				double x = arg0.getX() - 8;
+				double y = arg0.getY() - 8;
+				if(x < 0) {
+					x = 0;
+				}
+				
+				if(y < 0) {
+					y = 0;
+				}
+				int row = (int) (y / 26);
+				int col = (int) (x / 26);
+				
+				if(row >= 0 && col >= 0 &&  row < model.getRow() && col < model.getCol()) {
+					if(arg0.getButton().toString().equals("PRIMARY")) {
+						control.playMove(row, col);
+					}
+					else if(arg0.getButton().toString().equals("SECONDARY")) {
+						control.flagCell(row, col);
+						System.out.println("works");
+					}
+				}
+				System.out.print(arg0.getButton());
+				
+				
+				System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
+				addStackPanes(board, model.getRow(), model.getCol());
 			}
 
 		};
+		/*
+		 * EventHandler<MouseEvent> eventHandlerMouseFlag = new
+		 * EventHandler<MouseEvent>() {
+		 * 
+		 * @Override public void handle(MouseEvent arg0) { double x = arg0.getX() - 8;
+		 * double y = arg0.getY() - 8; if(x < 0) { x = 0; }
+		 * 
+		 * if(y < 0) { y = 0; } int row = (int) (y / 26); int col = (int) (x / 26);
+		 * 
+		 * if(row >= 0 && col >= 0 && row < model.getRow() && col < model.getCol()) {
+		 * control.playMove(row, col); addStackPanes(board, model.getRow(),
+		 * model.getCol()); }
+		 * 
+		 * System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) +
+		 * ")"); }
+		 * 
+		 * };
+		 */
 		board.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClick);
 		MenuBar menuBar = new MenuBar();
 		window.setTop(menuBar);
@@ -76,7 +118,7 @@ public class MinesweeperView extends Application implements Observer {
 
 			@Override
 			public void handle(WindowEvent arg0) {
-				// TODO
+				addStackPanes(board, model.getRow(), model.getCol());
 			}
 
 		};
@@ -107,7 +149,7 @@ public class MinesweeperView extends Application implements Observer {
 		for (int i = 0; i < cols; i++) {
 			for (int j = 0; j < rows; j++) {
 				StackPane pane = new StackPane();
-				panes[i][j] = pane;
+				panes[j][i] = pane;
 				MinesweeperCell cur = control.getCellClue(j, i);
 				pane.setPadding(new Insets(2));
 				pane.setBorder(
@@ -115,23 +157,28 @@ public class MinesweeperView extends Application implements Observer {
 								CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 				Circle circle = new Circle(10);
 				Text text = new Text();
-				texts[i][j] = text;
-				circles[i][j] = circle;
+				texts[j][i] = text;
+				circles[j][i] = circle;
 				text.setFont(new Font(15));
 				text.setFill(Color.RED);
 				if (cur.isHidden()) {
 					pane.setBackground(new Background(
 							new BackgroundFill(Color.DARKGREY, null, null)));
-					circle.setFill(Color.TRANSPARENT);
+					if (cur.isFlagged()) {
+						circle.setFill(Color.RED);
+					}
+					else {
+						circle.setFill(Color.TRANSPARENT);
+					}
 				} else {
 					pane.setBackground(
 							new Background(new BackgroundFill(Color.GRAY, null, null)));
-					if (cur.isFlagged()) {
-						circle.setFill(Color.RED);
-					} else if (cur.isMined()) {
+					if (cur.isMined()) {
 						circle.setFill(Color.BLACK);
 					} else {
-						text.setText(String.valueOf(cur.getMines()));
+						if(cur.getMines() != 0) {
+							text.setText(String.valueOf(cur.getMines()));
+						}
 						circle.setFill(Color.TRANSPARENT);
 					}
 				}

@@ -53,8 +53,11 @@ public class MinesweeperController {
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
 	private void showBombs() {
-		ArrayList<MinesweeperCell>bombsArray = model.getBombs();
+		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
 		
+		for(int i=0; i<bombsArray.size(); i++) {
+			bombsArray.get(i).setHidden();
+		}
 	}
 
 	//Should scan in the NW,N,NE,E,SE,S,SW,W to find a cell that has a number greater than 0

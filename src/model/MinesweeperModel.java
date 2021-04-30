@@ -22,16 +22,23 @@ public class MinesweeperModel {
 	private int fClickCol;
 	private int mark;
 
+	public MinesweeperModel() {
+		buildBoard(10, 10, 10); // Default board if no parameters are mentioned. (10 by 10 with 10 mines)
+	}
 	
 	public MinesweeperModel(int rows, int cols, int mines) {
+		buildBoard(rows, cols, mines);
+	}
+	
+	private void buildBoard(int rows, int cols, int mines) {
 		this.rows = rows;
 		this.cols = cols;
 		this.mines = mines;
 		bombsArray = new ArrayList<MinesweeperCell>();
 		mineSweepBoard = new MinesweeperCell[rows][cols];
-		for(int i = 0; i< rows; i++) {
+		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < cols; j++) {
-				mineSweepBoard[rows][cols] = new MinesweeperCell(i,j);
+				mineSweepBoard[i][j] = new MinesweeperCell(i,j);
 			}
 		}
 	}

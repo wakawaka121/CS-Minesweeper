@@ -112,7 +112,7 @@ public class MinesweeperModel {
 		}
 	}
 	
-	/*Saveed Game Constructor*/
+	/*Saved Game Constructor*/
 	public MinesweeperModel(MinesweeperBoard loadedGame) {
 		
 	}

@@ -65,19 +65,19 @@ public class MinesweeperController {
 		cellsHidden--;
 		
 		if(refToBoard[row][col].getMines() == 0) {
-//			revealCells(row, col - 1);
-//			revealCells(row, col + 1);
-//			revealCells(row - 1, col);
-//			revealCells(row - 1, col - 1);
-//			revealCells(row - 1, col + 1);
-//			revealCells(row + 1, col);
-//			revealCells(row + 1, col - 1);
-//			revealCells(row + 1, col + 1);
-
-			revealCells(row + 1, col);
-			revealCells(row - 1, col);
-			revealCells(row, col + 1);
 			revealCells(row, col - 1);
+			revealCells(row, col + 1);
+			revealCells(row - 1, col);
+			revealCells(row - 1, col - 1);
+			revealCells(row - 1, col + 1);
+			revealCells(row + 1, col);
+			revealCells(row + 1, col - 1);
+			revealCells(row + 1, col + 1);
+
+//			revealCells(row + 1, col);
+//			revealCells(row - 1, col);
+//			revealCells(row, col + 1);
+//			revealCells(row, col - 1);
 		}
 	}
 	

@@ -49,7 +49,7 @@ public class MinesweeperModel {
 		for(int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while(mineRow == row && mineCol == col) {
+			while(isMine(mineRow,mineCol) || (mineRow == row && mineCol == col)) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
 			}

@@ -15,6 +15,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -54,6 +56,10 @@ public class MinesweeperView extends Application implements Observer {
 	private Integer seconds = 0;
 	private Integer minute = 0;
 	private Integer hour = 0;
+	private int highScoreSec =0;
+	private int currSec = 0;
+	private boolean markMode;
+
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -65,12 +71,48 @@ public class MinesweeperView extends Application implements Observer {
 		window.setCenter(board);
 		board.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
 		board.setPadding(new Insets(8));
+		
 		EventHandler<MouseEvent> eventHandlerMouseClick = new EventHandler<MouseEvent>() {
 
-			@Override
 			public void handle(MouseEvent arg0) {
-				// TODO
-
+				double x = arg0.getX() - 8;
+				double y = arg0.getY() - 8;
+				if(x < 0) {
+					x = 0;
+				}
+				
+				if(y < 0) {
+					y = 0;
+				}
+				int row = (int) (y / 26);
+				int col = (int) (x / 26);
+				
+				if(row >= 0 && col >= 0 &&  row < model.getRow() && col < model.getCol()) {
+					if(arg0.getButton().toString().equals("PRIMARY")) {
+						control.playMove(row, col);
+					}
+					else if(arg0.getButton().toString().equals("SECONDARY")) {
+						control.flagCell(row, col);
+					}
+				}
+				System.out.print(arg0.getButton());
+				
+				
+				System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
+				addStackPanes(board, model.getRow(), model.getCol());
+				
+				if(control.isGameOver()) {
+					String message = "You lost!";
+					
+					if(control.gameWon()) {
+						message = "You won!";
+					}
+					
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setContentText(message);
+					alert.showAndWait();
+					stage.close();
+				}
 			}
 
 		};
@@ -78,6 +120,7 @@ public class MinesweeperView extends Application implements Observer {
 		MenuBar menuBar = new MenuBar();
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
+		addFlagToMenu(menuBar, board);
 		addStackPanes(board, model.getRow(), model.getCol());
 		
 		timer = new Label();
@@ -97,20 +140,75 @@ public class MinesweeperView extends Application implements Observer {
 		stage.setScene(scene);
 		stage.show();
 	}
+	
 
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
 		menuBar.getMenus().add(menu);
 		MenuItem menuItem = new MenuItem("New 10x10 Game");
+
 		menu.getItems().add(menuItem);
+		
 		EventHandler<ActionEvent> eventHandlerNewGame = new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				// TODO
+				// new game
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
+		
+		
+		
+	}
+	
+	private void addFlagToMenu(MenuBar menuBar, GridPane board) {
+		Menu menu = new Menu("Feature");
+		menuBar.getMenus().add(menu);
+		MenuItem mark = new MenuItem("Flag");
+		menu.getItems().add(mark);
+		
+		
+		EventHandler<ActionEvent> eventHandlerFlag = new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent e) {
+				//flag a cell
+				markMode = true;
+				EventHandler<MouseEvent> flagACell = new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent event) {
+						
+						if(markMode) {
+							double x = event.getX() - 8;
+							double y = event.getY() - 8;
+							if(x < 0) {
+								x = 0;
+							}
+							
+							if(y < 0) {
+								y = 0;
+							}
+							int row = (int) (y / 26);
+							int col = (int) (x / 26);
+							control.flagCell(row, col);
+						}
+
+						markMode = false;
+					}
+					
+				};
+				
+				board.addEventHandler(MouseEvent.MOUSE_CLICKED, flagACell);
+				
+				
+			}
+		};
+		
+		
+		
+		
+		
+		
 	}
 
 	private void addStackPanes(GridPane board, int rows, int cols) {
@@ -180,6 +278,8 @@ public class MinesweeperView extends Application implements Observer {
 				}
 				timer.setText(hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
 				
+
+				
 				//if(new game is pressed) {
 				//	
 				//	t.stop();
@@ -189,6 +289,7 @@ public class MinesweeperView extends Application implements Observer {
 		t.getKeyFrames().add(frame);
 		t.playFromStart();
 	}
+	
 
 	@Override
 	public void update(Observable o, Object arg) {

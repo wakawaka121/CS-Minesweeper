@@ -14,34 +14,41 @@ public class MinesweeperModel {
 	
 
 
+	public MinesweeperModel() {
+		buildBoard(10, 10, 10); // Default board if no parameters are mentioned. (10 by 10 with 10 mines)
+	}
 	
 	public MinesweeperModel(int rows, int cols, int mines) {
+		buildBoard(rows, cols, mines);
+	}
+	
+	private void buildBoard(int rows, int cols, int mines) {
 		this.rows = rows;
 		this.cols = cols;
 		this.mines = mines;
 		bombsArray = new ArrayList<MinesweeperCell>();
 		mineSweepBoard = new MinesweeperCell[rows][cols];
-		for(int i = 0; i< rows; i++) {
+		for(int i = 0; i < rows; i++) {
 			for(int j = 0; j < cols; j++) {
 				mineSweepBoard[i][j] = new MinesweeperCell(i,j);
 			}
 		}
 	}
 	
-	public void setBombs(MinesweeperCell firstMove) {
+	public void setBombs(int row, int col) {
 		Random randRow = new Random();
 		Random randCol = new Random();
 		for(int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while(!isMine(mineRow,mineCol) && !mineSweepBoard[mineRow][mineCol].equals(firstMove)) {
+			while(isMine(mineRow,mineCol) && (mineRow == row && mineCol == col)) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
 			}
 			mineSweepBoard[mineRow][mineCol].setMine(true);
+			System.out.println("(" + Integer.toString(mineRow) + "," + Integer.toString(mineCol) + ")");
 			bombsArray.add(mineSweepBoard[mineRow][mineCol]);
 			updateAdjacentBombs(mineRow,mineCol);
-			
 		}
 	}
 	
@@ -63,12 +70,12 @@ public class MinesweeperModel {
 			mineSweepBoard[row-1][col].increaseMines();
 		}
 		//NE update
-		if(row+1 < rows && col-1 >=0) {
-			mineSweepBoard[row+1][col-1].increaseMines();
+		if(row-1 >= 0 && col+1 < cols) {
+			mineSweepBoard[row-1][col+1].increaseMines();
 		}
 		//E update
-		if(row+1 < rows) {
-			mineSweepBoard[row+1][col].increaseMines();
+		if(col+1 < cols) {
+			mineSweepBoard[row][col+1].increaseMines();
 		}
 		//SE update
 		if(row+1 < rows && col+1 < cols) {
@@ -86,18 +93,12 @@ public class MinesweeperModel {
 		if(col-1 >= 0) {
 			mineSweepBoard[row][col-1].increaseMines();
 		}
-		
 	}
 	private boolean isMine(int row, int col) {
-		if(mineSweepBoard[row][col].isMined()) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return mineSweepBoard[row][col].isMined();
 	}
 	
-	/*Saveed Game Constructor*/
+	/*Saved Game Constructor*/
 	public MinesweeperModel(MinesweeperBoard loadedGame) {
 		
 	}

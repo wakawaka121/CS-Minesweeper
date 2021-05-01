@@ -8,12 +8,15 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import controller.MinesweeperController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -28,6 +31,7 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -35,6 +39,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 import model.MinesweeperBoard;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
@@ -45,14 +50,24 @@ public class MinesweeperView extends Application {
 	private Text[][] texts;
 	private Circle[][] circles;
 	private StackPane[][] panes;
+
 	private GridPane board;
+
 	private MinesweeperModel model;
 	private MinesweeperController control;
+
+	private Label timer;
+	private Integer seconds = 0;
+	private Integer minute = 0;
+	private Integer hour = 0;
+
 
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Minesweeper");
+
 		loadFile();
+
 		BorderPane window = new BorderPane();
 		board = new GridPane();
 		window.setCenter(board);
@@ -63,6 +78,7 @@ public class MinesweeperView extends Application {
 
 			@Override
 			public void handle(MouseEvent arg0) {
+
 				double x = arg0.getX() - 8;
 				double y = arg0.getY() - 8;
 				if(x < 0) {
@@ -102,6 +118,7 @@ public class MinesweeperView extends Application {
 					deleteSaveData();
 					stage.close();
 				}
+
 			}
 
 		};
@@ -110,6 +127,12 @@ public class MinesweeperView extends Application {
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
 		addStackPanes(board, model.getRow(), model.getCol());
+
+		
+		timer = new Label();
+		startTime(timer);
+		window.setBottom(timer);
+		
 		Scene scene = new Scene(window);
 		EventHandler<WindowEvent> eventHandlerWindowClose = new EventHandler<WindowEvent>() {
 
@@ -154,6 +177,7 @@ public class MinesweeperView extends Application {
 			e.printStackTrace();
 		}
 	}
+
 
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
@@ -241,5 +265,41 @@ public class MinesweeperView extends Application {
 			}
 		}
 	}
+	
+	private void startTime(Label timer) {
+		timer.setTextFill(Color.BLACK);
+		timer.setFont(Font.font(20));
+		HBox layout = new HBox(5);
+		layout.getChildren().add(timer);
+		start();
+		
+	}
+	
+	private void start() {
+		Timeline t = new Timeline();
+		t.setCycleCount(Timeline.INDEFINITE);
+		KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				seconds++;
+				if(seconds > 59) {
+					seconds = 0;
+					minute++;
+				}
+				if(minute > 59) {
+					minute = 0;
+					hour++;
+				}
+				timer.setText(hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
+				
+				//if(new game is pressed) {
+				//	
+				//	t.stop();
+				//}
+			}
+		});
+		t.getKeyFrames().add(frame);
+		t.playFromStart();
+	}
 
 }
+

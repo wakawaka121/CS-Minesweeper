@@ -13,7 +13,6 @@ public class MinesweeperModel {
 	private int cols;
 	private int mines;
 	
-	
 	private int[][] gameGrid;
 	private int[][] bombPlaced;
 	private int[][] bombMarked;

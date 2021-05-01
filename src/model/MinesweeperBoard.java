@@ -13,12 +13,14 @@ public class MinesweeperBoard implements Serializable {
 	private int rows;
 	private int cols;
 	private int mines;
+	private int cellsHidden;
 
-	public MinesweeperBoard(int rows, int cols, int mines,
+	public MinesweeperBoard(int rows, int cols, int mines, int cellsHidden,
 			MinesweeperCell[][] mineSweepBoard, ArrayList<MinesweeperCell> bombsArray) {
 		this.rows = rows;
 		this.cols = cols;
 		this.mines = mines;
+		this.cellsHidden = cellsHidden;
 		this.mineSweepBoard = mineSweepBoard;
 		this.bombsArray = bombsArray;
 	}
@@ -33,6 +35,10 @@ public class MinesweeperBoard implements Serializable {
 	
 	public int getMines() {
 		return mines;
+	}
+	
+	public int getCellsHidden() {
+		return cellsHidden;
 	}
 	
 	public MinesweeperCell[][] getMineSweepBoard(){

@@ -13,9 +13,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -79,7 +81,6 @@ public class MinesweeperView extends Application implements Observer {
 					}
 					else if(arg0.getButton().toString().equals("SECONDARY")) {
 						control.flagCell(row, col);
-						System.out.println("works");
 					}
 				}
 				System.out.print(arg0.getButton());
@@ -87,27 +88,22 @@ public class MinesweeperView extends Application implements Observer {
 				
 				System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
 				addStackPanes(board, model.getRow(), model.getCol());
+				
+				if(control.isGameOver()) {
+					String message = "You lost!";
+					
+					if(control.gameWon()) {
+						message = "You won!";
+					}
+					
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setContentText(message);
+					alert.showAndWait();
+					stage.close();
+				}
 			}
 
 		};
-		/*
-		 * EventHandler<MouseEvent> eventHandlerMouseFlag = new
-		 * EventHandler<MouseEvent>() {
-		 * 
-		 * @Override public void handle(MouseEvent arg0) { double x = arg0.getX() - 8;
-		 * double y = arg0.getY() - 8; if(x < 0) { x = 0; }
-		 * 
-		 * if(y < 0) { y = 0; } int row = (int) (y / 26); int col = (int) (x / 26);
-		 * 
-		 * if(row >= 0 && col >= 0 && row < model.getRow() && col < model.getCol()) {
-		 * control.playMove(row, col); addStackPanes(board, model.getRow(),
-		 * model.getCol()); }
-		 * 
-		 * System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) +
-		 * ")"); }
-		 * 
-		 * };
-		 */
 		board.addEventHandler(MouseEvent.MOUSE_CLICKED, eventHandlerMouseClick);
 		MenuBar menuBar = new MenuBar();
 		window.setTop(menuBar);

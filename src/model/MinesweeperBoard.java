@@ -31,6 +31,18 @@ public class MinesweeperBoard implements Serializable {
 		return cols;
 	}
 	
+	public int getMines() {
+		return mines;
+	}
+	
+	public MinesweeperCell[][] getMineSweepBoard(){
+		return mineSweepBoard;
+	}
+	
+	public ArrayList<MinesweeperCell> getBombsArray(){
+		return bombsArray;
+	}
+	
 	public MinesweeperCell getCell(int row, int col) {
 		return mineSweepBoard[row][col];
 	}

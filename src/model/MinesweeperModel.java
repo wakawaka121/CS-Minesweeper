@@ -1,9 +1,11 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
-public class MinesweeperModel {
+@SuppressWarnings("deprecation")
+public class MinesweeperModel extends Observable {
 	//Needs to be added
 	private MinesweeperCell[][] mineSweepBoard;
 	private ArrayList<MinesweeperCell> bombsArray;
@@ -49,7 +51,7 @@ public class MinesweeperModel {
 		for(int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while(isMine(mineRow,mineCol) && (mineRow == row && mineCol == col)) {
+			while(mineRow == row && mineCol == col) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
 			}
@@ -66,6 +68,10 @@ public class MinesweeperModel {
 	
 	public MinesweeperCell[][] getBoard() {
 		return mineSweepBoard;
+	}
+	
+	public MinesweeperBoard getSerialized() {
+		return new MinesweeperBoard(rows, cols, mines, mineSweepBoard, bombsArray);
 	}
 	
 	private void updateAdjacentBombs(int row, int col){
@@ -108,7 +114,11 @@ public class MinesweeperModel {
 	
 	/*Saved Game Constructor*/
 	public MinesweeperModel(MinesweeperBoard loadedGame) {
-		
+		mineSweepBoard = loadedGame.getMineSweepBoard();
+		bombsArray = loadedGame.getBombsArray();
+		rows = loadedGame.getRows();
+		cols = loadedGame.getCols();
+		mines = loadedGame.getMines();
 	}
 	
 	public int getRow() {
@@ -125,6 +135,11 @@ public class MinesweeperModel {
 		
 	public MinesweeperCell getCell(int row, int col) {
 		return mineSweepBoard[row][col];
+	}
+
+	public void updateSelf() {
+		this.setChanged();
+		this.notifyObservers(this.getSerialized());
 	}
 	
 

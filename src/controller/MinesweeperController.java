@@ -112,4 +112,8 @@ public class MinesweeperController {
 		gameWon = true;
 		return true;
 	}
+
+	public void modelUpdate() {
+		model.updateSelf();
+	}
 }

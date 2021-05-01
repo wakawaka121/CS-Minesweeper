@@ -52,6 +52,7 @@ public class MinesweeperView extends Application {
 	private StackPane[][] panes;
 
 	private GridPane board;
+	private BorderPane window;
 
 	private MinesweeperModel model;
 	private MinesweeperController control;
@@ -170,7 +171,7 @@ public class MinesweeperView extends Application {
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			model = new MinesweeperModel();
+			model = new MinesweeperModel(15, 10, 10);
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -182,27 +183,16 @@ public class MinesweeperView extends Application {
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
 		menuBar.getMenus().add(menu);
-		MenuItem menuItem1 = new MenuItem("New 10x10 Game");
-		menu.getItems().add(menuItem1);
-		EventHandler<ActionEvent> eventHandlerNewGame1 = new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				resetGame(10, 10, 10);
-			}
-		};
-		menuItem1.addEventHandler(ActionEvent.ANY, eventHandlerNewGame1);
-		
-		MenuItem menuItem2 = new MenuItem("New 10x15 Game");
-		menu.getItems().add(menuItem2);
-		EventHandler<ActionEvent> eventHandlerNewGame2 = new EventHandler<ActionEvent>() {
+		MenuItem menuItem = new MenuItem("New 10x15 Game");
+		menu.getItems().add(menuItem);
+		EventHandler<ActionEvent> eventHandlerNewGame = new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				resetGame(15, 10, 10);
 			}
 		};
-		menuItem2.addEventHandler(ActionEvent.ANY, eventHandlerNewGame2);
+		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
 	}
 	
 	private void resetGame(int rows, int cols, int mines) {

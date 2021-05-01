@@ -1,11 +1,10 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class MinesweeperModel extends Observable {
+public class MinesweeperModel {
 	//Needs to be added
 	private MinesweeperCell[][] mineSweepBoard;
 	private ArrayList<MinesweeperCell> bombsArray;
@@ -136,11 +135,5 @@ public class MinesweeperModel extends Observable {
 	public MinesweeperCell getCell(int row, int col) {
 		return mineSweepBoard[row][col];
 	}
-
-	public void updateSelf() {
-		this.setChanged();
-		this.notifyObservers(this.getSerialized());
-	}
-	
 
 }

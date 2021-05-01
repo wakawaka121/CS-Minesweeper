@@ -7,9 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Observable;
-import java.util.Observer;
-
 import controller.MinesweeperController;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -43,11 +40,12 @@ import model.MinesweeperCell;
 import model.MinesweeperModel;
 
 @SuppressWarnings("deprecation")
-public class MinesweeperView extends Application implements Observer {
+public class MinesweeperView extends Application {
 
 	private Text[][] texts;
 	private Circle[][] circles;
 	private StackPane[][] panes;
+	private GridPane board;
 	private MinesweeperModel model;
 	private MinesweeperController control;
 
@@ -56,7 +54,7 @@ public class MinesweeperView extends Application implements Observer {
 		stage.setTitle("Minesweeper");
 		loadFile();
 		BorderPane window = new BorderPane();
-		GridPane board = new GridPane();
+		board = new GridPane();
 		window.setCenter(board);
 		board.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
 		board.setPadding(new Insets(8));
@@ -89,7 +87,7 @@ public class MinesweeperView extends Application implements Observer {
 				
 				
 				System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
-				control.modelUpdate();
+				addStackPanes(board, model.getRow(), model.getCol());
 				
 				if(control.isGameOver()) {
 					String message = "You lost!";
@@ -144,14 +142,12 @@ public class MinesweeperView extends Application implements Observer {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			MinesweeperBoard load = (MinesweeperBoard) ois.readObject();
 			model = new MinesweeperModel(load);
-			model.addObserver(this);
 			control = new MinesweeperController(model);
 			ois.close();
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			model = new MinesweeperModel();
-			model.addObserver(this);
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -162,23 +158,33 @@ public class MinesweeperView extends Application implements Observer {
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
 		menuBar.getMenus().add(menu);
-		MenuItem menuItem = new MenuItem("New 10x10 Game");
-		menu.getItems().add(menuItem);
-		EventHandler<ActionEvent> eventHandlerNewGame = new EventHandler<ActionEvent>() {
+		MenuItem menuItem1 = new MenuItem("New 10x10 Game");
+		menu.getItems().add(menuItem1);
+		EventHandler<ActionEvent> eventHandlerNewGame1 = new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
 				resetGame(10, 10, 10);
 			}
 		};
-		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
+		menuItem1.addEventHandler(ActionEvent.ANY, eventHandlerNewGame1);
+		
+		MenuItem menuItem2 = new MenuItem("New 10x15 Game");
+		menu.getItems().add(menuItem2);
+		EventHandler<ActionEvent> eventHandlerNewGame2 = new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				resetGame(15, 10, 10);
+			}
+		};
+		menuItem2.addEventHandler(ActionEvent.ANY, eventHandlerNewGame2);
 	}
 	
 	private void resetGame(int rows, int cols, int mines) {
 		model = new MinesweeperModel(rows, cols, mines);
-		model.addObserver(this);
 		control = new MinesweeperController(model);
-		control.modelUpdate();
+		addStackPanes(board, rows, cols);
 		deleteSaveData();
 	}
 	
@@ -234,45 +240,6 @@ public class MinesweeperView extends Application implements Observer {
 				board.add(pane, i, j);
 			}
 		}
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		MinesweeperBoard board = (MinesweeperBoard) arg;
-		for (int i = 0; i < board.getCols(); i++) {
-			for (int j = 0; j < board.getRows(); j++) {
-				MinesweeperCell cur = board.getCell(i, j);
-				StackPane pane = panes[i][j];
-				Circle circle = circles[i][j];
-				Text text = texts[i][j];
-				if (cur.isHidden()) {
-					pane.setBackground(new Background(
-							new BackgroundFill(Color.DARKGREY, null, null)));
-					if (cur.isFlagged()) {
-						circle.setFill(Color.RED);
-					}
-					else {
-						circle.setFill(Color.TRANSPARENT);
-					}
-					text.setText("");
-				} else {
-					pane.setBackground(
-							new Background(new BackgroundFill(Color.GRAY, null, null)));
-					if (cur.isMined()) {
-						circle.setFill(Color.BLACK);
-					} else {
-						if(cur.getMines() != 0) {
-							text.setText(String.valueOf(cur.getMines()));
-						}
-						else {
-							text.setText("");
-						}
-						circle.setFill(Color.TRANSPARENT);
-					}
-				}
-			}
-		}
-
 	}
 
 }

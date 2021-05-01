@@ -40,7 +40,7 @@ public class MinesweeperController {
 	
 	public void playMove(int row, int col) {
 		MinesweeperCell  curMove = refToBoard[row][col];
-		if(curMove.isHidden() && !gameOver) {
+		if(curMove.isHidden() && !curMove.isFlagged() && !gameOver) {
 			if(cellsHidden == model.getRow() * model.getCol()) {
 				model.setBombs(row, col);
 				revealCells(row, col);
@@ -85,7 +85,8 @@ public class MinesweeperController {
 	}
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
-	private void showBombs() {
+	// TODO set to private
+	public void showBombs() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
 		
 		for(int i=0; i<bombsArray.size(); i++) {
@@ -113,7 +114,4 @@ public class MinesweeperController {
 		return true;
 	}
 
-	public void modelUpdate() {
-		model.updateSelf();
-	}
 }

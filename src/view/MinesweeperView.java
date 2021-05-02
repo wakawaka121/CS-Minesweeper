@@ -188,7 +188,7 @@ public class MinesweeperView extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(15, 10, 10);
+				resetGame(15, 10, 20);
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
@@ -209,6 +209,7 @@ public class MinesweeperView extends Application {
 	}
 
 	private void addStackPanes(GridPane board, int rows, int cols) {
+		board.getChildren().clear();
 		panes = new StackPane[rows][cols];
 		texts = new Text[rows][cols];
 		circles = new Circle[rows][cols];

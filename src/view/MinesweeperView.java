@@ -117,7 +117,6 @@ public class MinesweeperView extends Application {
 					alert.setContentText(message);
 					alert.showAndWait();
 					deleteSaveData();
-					stage.close();
 				}
 
 			}

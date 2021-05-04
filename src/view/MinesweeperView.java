@@ -62,7 +62,7 @@ public class MinesweeperView extends Application {
 
 	private GridPane tDisplay;
 	private Label timer;
-	private Label hsDisplay;
+	private Label highScore;
 	private Integer seconds = 0;
 	private Integer minute = 0;
 	private Integer hour = 0;
@@ -71,7 +71,6 @@ public class MinesweeperView extends Application {
 	private Integer hsHour = 0;
 	private int highScoreSec =0;
 	private int currSec = 0;
-	private boolean markMode;
 	private boolean gameRestart = false;
 
 
@@ -135,12 +134,15 @@ public class MinesweeperView extends Application {
 		MenuBar menuBar = new MenuBar();
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
-		addFlagToMenu(menuBar, board);
 		addStackPanes(board, model.getRow(), model.getCol());
 		
 		tDisplay = new GridPane();
 		timer = new Label();
+		highScore = new Label();
+		highScore.setTextFill(Color.BLACK);
+		highScore.setFont(Font.font(15));
 		startTime(timer);
+		tDisplay.add(highScore, 4 , 0);
 		window.setBottom(tDisplay);
 		
 		
@@ -208,59 +210,14 @@ public class MinesweeperView extends Application {
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
 	}
 	
-	private void addFlagToMenu(MenuBar menuBar, GridPane board) {
-		Menu menu = new Menu("Feature");
-		menuBar.getMenus().add(menu);
-		MenuItem mark = new MenuItem("Flag");
-		menu.getItems().add(mark);
-		
-		
-		EventHandler<ActionEvent> eventHandlerFlag = new EventHandler<ActionEvent>() {
 
-			@Override
-			public void handle(ActionEvent e) {
-				//flag a cell
-				markMode = true;
-				EventHandler<MouseEvent> flagACell = new EventHandler<MouseEvent>() {
-					public void handle(MouseEvent event) {
-						
-						if(markMode) {
-							double x = event.getX() - 8;
-							double y = event.getY() - 8;
-							if(x < 0) {
-								x = 0;
-							}
-							
-							if(y < 0) {
-								y = 0;
-							}
-							int row = (int) (y / 26);
-							int col = (int) (x / 26);
-							control.flagCell(row, col);
-						}
-
-						markMode = false;
-					}
-					
-				};
-				
-				board.addEventHandler(MouseEvent.MOUSE_CLICKED, flagACell);
-					
-			}
-		};
-
-		
-		mark.addEventHandler(ActionEvent.ANY, eventHandlerFlag);
-		
-		
-	}
 
 	private void resetGame(int rows, int cols, int mines) {
 		model = new MinesweeperModel(rows, cols, mines);
 		control = new MinesweeperController(model);
 		addStackPanes(board, rows, cols);
+		tDisplay.getChildren().remove(timer);
 		timer = new Label();
-		tDisplay.getChildren().clear();
 		startTime(timer);
 		deleteSaveData();
 	}
@@ -323,9 +280,8 @@ public class MinesweeperView extends Application {
 	
 	private void startTime(Label timer) {
 		timer.setTextFill(Color.BLACK);
-		timer.setFont(Font.font(20));
-		
-		tDisplay.getChildren().add(timer);
+		timer.setFont(Font.font(15));
+		tDisplay.add(timer,0 ,0);
 		start();
 		
 		
@@ -345,21 +301,23 @@ public class MinesweeperView extends Application {
 					minute = 0;
 					hour++;
 				}
-				timer.setText(hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
+				timer.setText("Time:" + hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
 				
 				if(gameRestart) {
 					currSec = (hour * 60 * 60) + (minute * 60) + seconds;
-					if(currSec > highScoreSec) {
+					if(highScoreSec == 0) {
 						highScoreSec = currSec;
-//						hsHour = highScoreSec/3600;
-//						hsMin = (highScoreSec - hsHour * 3600) /60;
-//						hsSec = highScoreSec - (hsHour * 3600) - (hsMin * 60);
-//						hsDisplay.setTextFill(Color.BLACK);
-//						hsDisplay.setFont(Font.font(20));
-//						hsDisplay.setText(hsHour.toString() + ":"+ hsMin.toString() + ":" + hsSec.toString());
+						highScore.setText("\t\t\t High Score: " + hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
+					}
+					if(currSec < highScoreSec) {
+						highScoreSec = currSec;
+						hsHour = highScoreSec/3600;
+						hsMin = (highScoreSec - hsHour * 3600) /60;
+						hsSec = highScoreSec - (hsHour * 3600) - (hsMin * 60);
+						
+						highScore.setText("\t\t\t High Score: " + hsHour.toString() + ":"+ hsMin.toString() + ":" + hsSec.toString());
 						
 					}
-					System.out.println(currSec);
 					hour = 0;
 					minute = 0;
 					seconds = 0;

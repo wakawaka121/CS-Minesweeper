@@ -19,15 +19,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-<<<<<<< HEAD
-=======
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
->>>>>>> refs/remotes/origin/chris-feature-branch
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -46,10 +42,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-<<<<<<< HEAD
-=======
 import javafx.util.Duration;
->>>>>>> refs/remotes/origin/chris-feature-branch
 import model.MinesweeperBoard;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
@@ -284,7 +277,6 @@ public class MinesweeperView extends Application {
 		}
 	}
 
-	@Override
 	public void update(Observable o, Object arg) {
 		MinesweeperBoard board = (MinesweeperBoard) arg;
 		for (int i = 0; i < board.getCols(); i++) {

@@ -40,8 +40,8 @@ public class MinesweeperController {
 	
 	public void playMove(int row, int col) {
 		MinesweeperCell  curMove = refToBoard[row][col];
-		if(curMove.isHidden() && !gameOver) {
-			if(cellsHidden == model.getRow() * model.getCol()) {
+		if(curMove.isHidden() && !curMove.isFlagged() && !gameOver) {
+			if(model.getCellsHidden() == model.getRow() * model.getCol()) {
 				model.setBombs(row, col);
 				revealCells(row, col);
 			} else if(curMove.isMined()) {
@@ -52,7 +52,7 @@ public class MinesweeperController {
 				revealCells(row, col);
 			}
 		}
-		
+
 		if(isGameOver()) {
 			gameOver = true;
 		}
@@ -71,6 +71,8 @@ public class MinesweeperController {
 		
 		refToBoard[row][col].setHidden();
 		cellsHidden--;
+		model.decCellsHidden();
+
 		
 		if(refToBoard[row][col].getMines() == 0) {
 			revealCells(row, col - 1);
@@ -85,7 +87,8 @@ public class MinesweeperController {
 	}
 	
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
-	private void showBombs() {
+	// TODO set to private
+	public void showBombs() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
 		
 		for(int i=0; i<bombsArray.size(); i++) {
@@ -100,15 +103,12 @@ public class MinesweeperController {
 	
 	public boolean isGameOver() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
-		
 		if(gameOver) {
 			return true;
 		}
-		
-		if(cellsHidden != model.countOfMines()) {
+		if(model.getCellsHidden() != model.countOfMines()) {
 			return false;
 		}
-		
 		gameWon = true;
 		return true;
 	}

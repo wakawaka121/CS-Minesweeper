@@ -1,7 +1,10 @@
 package model;
 
-public class MinesweeperCell {
+import java.io.Serializable;
+
+public class MinesweeperCell implements Serializable {
 	
+	private static final long serialVersionUID = 1L;
 	private boolean hidden;
 	private boolean mined;
 	private boolean flagged;

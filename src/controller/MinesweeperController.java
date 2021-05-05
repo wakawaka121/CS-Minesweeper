@@ -90,7 +90,6 @@ public class MinesweeperController {
 	// TODO set to private
 	public void showBombs() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
-		
 		for(int i=0; i<bombsArray.size(); i++) {
 			bombsArray.get(i).setHidden();
 		}

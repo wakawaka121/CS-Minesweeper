@@ -9,7 +9,6 @@ public class MinesweeperBoard implements Serializable {
 
 	private MinesweeperCell[][] mineSweepBoard;
 	private ArrayList<MinesweeperCell> bombsArray;
-	// private MinesweeperCell[] bombsArray;
 	private int rows;
 	private int cols;
 	private int mines;

@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import jdk.jfr.Timespan;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
 
@@ -28,10 +29,7 @@ public class MinesweeperController {
 		//highScore = model.getHighScore();
 	}
 	
-	public boolean gameWon(int timeInSeconds) {
-		if(gameWon == true) {
-			model.updateScores(timeInSeconds);
-		}
+	public boolean gameWon() {
 		return gameWon;
 	}
 	
@@ -59,10 +57,10 @@ public class MinesweeperController {
 				revealCells(row, col);
 			}
 		}
-
-		if(isGameOver()) {
-			gameOver = true;
-		}
+		isGameOver();
+//		if(isGameOver()) {
+//			gameOver = true;
+//		}
 	}
 	
 	// Reveal all cells after a move is made.
@@ -106,16 +104,25 @@ public class MinesweeperController {
 	}
 	
 	public boolean isGameOver() {
-		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
-		if(gameOver) {
-			return true;
-		}
-		
-		if(model.getCellsHidden() != model.countOfMines()) {
+		if(model.getCellsHidden() == model.countOfMines()) {
+			gameOver = true;
+			gameWon = true;
+			return gameOver;
+		} else if(!gameOver) {
 			return false;
+		} else {
+			return gameOver;
 		}
-		gameWon = true;
-		return true;
+//		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
+//		if(gameOver) {
+//			return true;
+//		}
+//		
+//		if(model.getCellsHidden() != model.countOfMines()) {
+//			return false;
+//		}
+//		gameWon = true;
+//		return true;
 	}
 	
 	public String getHighScoreString(){
@@ -123,8 +130,10 @@ public class MinesweeperController {
 		String highScoreString = "";
 		if(highScore.size() != 0) {
 			Collections.sort(highScore);
-			for(int item : highScore) {
-				highScoreString += item + "\n";
+			for(int score = 0; score < highScore.size(); score++) {
+				int curScore = highScore.get(score);
+				String time = String.format("%2d:%02d", curScore / 60, curScore % 60);
+				highScoreString += (score+1) + ": " + time + "\n";
 			}
 		}
 		return highScoreString;

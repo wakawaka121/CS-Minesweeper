@@ -65,15 +65,16 @@ public class MinesweeperView extends Application {
 	private GridPane tDisplay;
 	private Label timer;
 	private Label highScore;
+	private Timeline solveTime;
 	private Integer seconds = 0;
-	private Integer minute = 0;
-	private Integer hour = 0;
-	private Integer hsSec = 0;
-	private Integer hsMin = 0;
-	private Integer hsHour = 0;
-	private int highScoreSec = 0;
-	private int currSec = 0;
-	private boolean gameRestart = false;
+//	private Integer minute = 0;
+//	private Integer hour = 0;
+//	private Integer hsSec = 0;
+//	private Integer hsMin = 0;
+//	private Integer hsHour = 0;
+//	private int highScoreSec = 0;
+//	private int currSec = 0;
+//	private boolean gameRestart = false;
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -122,10 +123,13 @@ public class MinesweeperView extends Application {
 				addStackPanes(board, model.getRow(), model.getCol());
 				
 				if(control.isGameOver()) {
+					solveTime.stop();
 					String scoresString = control.getHighScoreString();
 					String message = "You lost!\nHigh Scores:\n";
 					message = message + scoresString;
-					if(control.gameWon(highScoreSec)) {
+					if(control.gameWon()) {
+						model.updateScores(seconds);
+						scoresString = control.getHighScoreString();
 						message = "You won!\nHigh Scores:\n";
 						message += scoresString;
 					}
@@ -152,7 +156,7 @@ public class MinesweeperView extends Application {
 		startTime(timer);
 		tDisplay.add(highScore, 4 , 0);
 		window.setBottom(tDisplay);
-		window.setBottom(timer);
+		//window.setBottom(timer);
 		
 		Scene scene = new Scene(window);
 		EventHandler<WindowEvent> eventHandlerWindowClose = new EventHandler<WindowEvent>() {
@@ -208,8 +212,8 @@ public class MinesweeperView extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				gameRestart = true;
-				resetGame(15, 10, 20);
+				//gameRestart = true;
+				resetGame(15, 10, 1);
 				
 			}
 		};
@@ -224,6 +228,7 @@ public class MinesweeperView extends Application {
 		addStackPanes(board, rows, cols);
 		tDisplay.getChildren().remove(timer);
 		timer = new Label();
+		seconds = 0;
 		startTime(timer);
 		deleteSaveData();
 		stage.sizeToScene();
@@ -316,53 +321,22 @@ public class MinesweeperView extends Application {
 	private void startTime(Label timer) {
 		timer.setTextFill(Color.BLACK);
 		timer.setFont(Font.font(15));
-		tDisplay.add(timer,0 ,0);
+		tDisplay.add(timer, 0 ,0);
 		start();
 		
 	}
 	
 	private void start() {
-		Timeline t = new Timeline();
-		t.setCycleCount(Timeline.INDEFINITE);
+		solveTime = new Timeline();
+		solveTime.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				seconds++;
-				if(seconds > 59) {
-					seconds = 0;
-					minute++;
-				}
-				if(minute > 59) {
-					minute = 0;
-					hour++;
-				}
-				timer.setText("Time:" + hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
-				
-				if(gameRestart) {
-					currSec = (hour * 60 * 60) + (minute * 60) + seconds;
-					if(highScoreSec == 0) {
-						highScoreSec = currSec;
-						highScore.setText("\t\t\t High Score: " + hour.toString() + ":"+ minute.toString() + ":" + seconds.toString());
-					}
-					if(currSec < highScoreSec) {
-						highScoreSec = currSec;
-						hsHour = highScoreSec/3600;
-						hsMin = (highScoreSec - hsHour * 3600) /60;
-						hsSec = highScoreSec - (hsHour * 3600) - (hsMin * 60);
-						
-						highScore.setText("\t\t\t High Score: " + hsHour.toString() + ":"+ hsMin.toString() + ":" + hsSec.toString());
-						
-					}
-					hour = 0;
-					minute = 0;
-					seconds = 0;
-					currSec = 0;
-					gameRestart = false;
-					t.stop();
-				}
+				timer.setText("Time:" + seconds.toString());
 			}
 		});
-		t.getKeyFrames().add(frame);
-		t.playFromStart();
+		solveTime.getKeyFrames().add(frame);
+		solveTime.playFromStart();
 	}
 	
 

@@ -152,7 +152,7 @@ public class MinesweeperModel {
 	
 	public void updateScores(int time) {
 	if(highScore.size() == 10) {
-		highScore.remove(Collections.min(highScore));
+		highScore.remove(Collections.max(highScore));
 		highScore.add(time);
 	} else {
 		highScore.add(time);

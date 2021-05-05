@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
@@ -13,15 +14,8 @@ public class MinesweeperModel {
 	private int cols;
 	private int mines;
 	private int cellsHidden;
-
-	private int[][] gameGrid;
-	private int[][] bombPlaced;
-	private int[][] bombMarked;
-	private int gridR;
-	private int gridC;
-	private int fClickRow;
-	private int fClickCol;
-	private int mark;
+	private ArrayList<Integer> highScore;
+	//private int[] scoreArray;
 
 	public MinesweeperModel() {
 		buildBoard(10, 10, 10); // Default board if no parameters are mentioned. (10 by 10
@@ -37,6 +31,7 @@ public class MinesweeperModel {
 		this.cols = cols;
 		this.mines = mines;
 		cellsHidden = rows * cols;
+		//highScore = new ArrayList<Integer>();
 		bombsArray = new ArrayList<MinesweeperCell>();
 		mineSweepBoard = new MinesweeperCell[rows][cols];
 		for (int i = 0; i < rows; i++) {
@@ -74,7 +69,7 @@ public class MinesweeperModel {
 
 	public MinesweeperBoard getSerialized() {
 		return new MinesweeperBoard(rows, cols, mines, cellsHidden, mineSweepBoard,
-				bombsArray);
+				bombsArray, highScore);
 	}
 
 	private void updateAdjacentBombs(int row, int col) {
@@ -124,6 +119,7 @@ public class MinesweeperModel {
 		cols = loadedGame.getCols();
 		mines = loadedGame.getMines();
 		cellsHidden = loadedGame.getCellsHidden();
+		highScore = loadedGame.getHighScore();
 	}
 
 	public int getRow() {
@@ -145,6 +141,23 @@ public class MinesweeperModel {
 	public void decCellsHidden() {
 		cellsHidden--;
 	}
+		
+	public ArrayList<Integer> getHighScore() {
+		return highScore;
+	}
+	
+	public void setHighScore(ArrayList<Integer> scores) {
+		highScore = scores;
+	}
+	
+	public void updateScores(int time) {
+	if(highScore.size() == 10) {
+		highScore.remove(Collections.min(highScore));
+		highScore.add(time);
+	} else {
+		highScore.add(time);
+	}
+}
 
 	public MinesweeperCell getCell(int row, int col) {
 		return mineSweepBoard[row][col];

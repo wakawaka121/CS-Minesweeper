@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import model.MinesweeperCell;
 import model.MinesweeperModel;
@@ -12,10 +13,10 @@ public class MinesweeperController {
 	private boolean gameOver;
 	private int mineCount;
 	private int flagCount;
-	
 	private int cellsHidden;
-	
 	private boolean gameWon;
+	//private ArrayList<Integer> highScore;
+	
 	
 	public MinesweeperController(MinesweeperModel model) {
 		this.model = model;
@@ -24,9 +25,13 @@ public class MinesweeperController {
 		gameWon = false;
 		cellsHidden = model.getRow() * model.getCol();
 		flagCount = 0;
+		//highScore = model.getHighScore();
 	}
 	
-	public boolean gameWon() {
+	public boolean gameWon(int timeInSeconds) {
+		if(gameWon == true) {
+			model.updateScores(timeInSeconds);
+		}
 		return gameWon;
 	}
 	
@@ -112,5 +117,28 @@ public class MinesweeperController {
 		gameWon = true;
 		return true;
 	}
+	
+	public String getHighScoreString(){
+		ArrayList<Integer> highScore = model.getHighScore();
+		String highScoreString = "";
+		if(highScore.size() != 0) {
+			Collections.sort(highScore);
+			for(int item : highScore) {
+				highScoreString += item + "\n";
+			}
+		}
+		return highScoreString;
+		
+			
+	}
+	
+//	public void updateScores(int time) {
+//		if(highScore.size() == 10) {
+//			highScore.remove(Collections.min(highScore));
+//			highScore.add(time);
+//		} else {
+//			highScore.add(time);
+//		}
+//	}
 
 }

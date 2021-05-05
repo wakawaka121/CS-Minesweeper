@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 
 import controller.MinesweeperController;
@@ -52,8 +54,11 @@ public class MinesweeperView extends Application {
 	private Text[][] texts;
 	private Circle[][] circles;
 	private StackPane[][] panes;
+	
 	private GridPane board;
 	private BorderPane window;
+	private Stage stage;
+	
 	private MinesweeperModel model;
 	private MinesweeperController control;
 	
@@ -66,12 +71,13 @@ public class MinesweeperView extends Application {
 	private Integer hsSec = 0;
 	private Integer hsMin = 0;
 	private Integer hsHour = 0;
-	private int highScoreSec =0;
+	private int highScoreSec = 0;
 	private int currSec = 0;
 	private boolean gameRestart = false;
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		this.stage = stage;
 		stage.setTitle("Minesweeper");
 		//model = new MinesweeperModel(15, 10, 10);
 		//control = new MinesweeperController(model);
@@ -87,8 +93,7 @@ public class MinesweeperView extends Application {
 		board.setPadding(new Insets(8));
 
 		EventHandler<MouseEvent> eventHandlerMouseClick = new EventHandler<MouseEvent>() {
-
-			@Override
+			
 			public void handle(MouseEvent arg0) {
 				double x = arg0.getX() - 8;
 				double y = arg0.getY() - 8;
@@ -117,16 +122,18 @@ public class MinesweeperView extends Application {
 				addStackPanes(board, model.getRow(), model.getCol());
 				
 				if(control.isGameOver()) {
-					String message = "You lost!";
-					
-					if(control.gameWon()) {
-						message = "You won!";
+					String scoresString = control.getHighScoreString();
+					String message = "You lost!\nHigh Scores:\n";
+					message = message + scoresString;
+					if(control.gameWon(highScoreSec)) {
+						message = "You won!\nHigh Scores:\n";
+						message += scoresString;
 					}
 					
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setContentText(message);
 					alert.showAndWait();
-					deleteSaveData();
+					//deleteSaveData();
 				}
 			}
 
@@ -136,6 +143,7 @@ public class MinesweeperView extends Application {
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
 		addStackPanes(board, model.getRow(), model.getCol());
+		
 		tDisplay = new GridPane();
 		timer = new Label();
 		highScore = new Label();
@@ -145,6 +153,7 @@ public class MinesweeperView extends Application {
 		tDisplay.add(highScore, 4 , 0);
 		window.setBottom(tDisplay);
 		window.setBottom(timer);
+		
 		Scene scene = new Scene(window);
 		EventHandler<WindowEvent> eventHandlerWindowClose = new EventHandler<WindowEvent>() {
 
@@ -182,6 +191,7 @@ public class MinesweeperView extends Application {
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			model = new MinesweeperModel(15, 10, 10);
+			model.setHighScore(new ArrayList<Integer>());
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -200,19 +210,23 @@ public class MinesweeperView extends Application {
 			public void handle(ActionEvent arg0) {
 				gameRestart = true;
 				resetGame(15, 10, 20);
+				
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
 	}
 	
 	private void resetGame(int rows, int cols, int mines) {
+		ArrayList<Integer> scores = model.getHighScore();
 		model = new MinesweeperModel(rows, cols, mines);
 		control = new MinesweeperController(model);
+		model.setHighScore(scores);
 		addStackPanes(board, rows, cols);
 		tDisplay.getChildren().remove(timer);
 		timer = new Label();
 		startTime(timer);
 		deleteSaveData();
+		stage.sizeToScene();
 	}
 	
 	private void deleteSaveData() {
@@ -270,7 +284,7 @@ public class MinesweeperView extends Application {
 		}
 	}
 	
-	@Override
+	
 	public void update(Observable o, Object arg) {
 		MinesweeperBoard board = (MinesweeperBoard) arg;
 		for (int i = 0; i < board.getCols(); i++) {
@@ -299,8 +313,6 @@ public class MinesweeperView extends Application {
 		}
 	}
 
-
-	
 	private void startTime(Label timer) {
 		timer.setTextFill(Color.BLACK);
 		timer.setFont(Font.font(15));

@@ -50,9 +50,12 @@ public class MinesweeperView extends Application {
 	private Text[][] texts;
 	private Circle[][] circles;
 	private StackPane[][] panes;
+	
+	private static final int STD_SIZE = 15;
 
 	private GridPane board;
 	private BorderPane window;
+	private Stage stage;
 
 	private MinesweeperModel model;
 	private MinesweeperController control;
@@ -65,11 +68,12 @@ public class MinesweeperView extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		this.stage = stage;
 		stage.setTitle("Minesweeper");
 
 		loadFile();
 
-		BorderPane window = new BorderPane();
+		window = new BorderPane();
 		board = new GridPane();
 		window.setCenter(board);
 		board.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
@@ -116,7 +120,6 @@ public class MinesweeperView extends Application {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setContentText(message);
 					alert.showAndWait();
-					deleteSaveData();
 				}
 
 			}
@@ -139,11 +142,13 @@ public class MinesweeperView extends Application {
 			@Override
 			public void handle(WindowEvent arg0) {
 				try {
-					FileOutputStream fos = new FileOutputStream("save_game.dat");
-					ObjectOutputStream oos = new ObjectOutputStream(fos);
-					oos.writeObject(model.getSerialized());
-					fos.close();
-					oos.close();
+					if (!control.isGameOver()) {
+						FileOutputStream fos = new FileOutputStream("save_game.dat");
+						ObjectOutputStream oos = new ObjectOutputStream(fos);
+						oos.writeObject(model.getSerialized());
+						fos.close();
+						oos.close();
+					}
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -170,7 +175,7 @@ public class MinesweeperView extends Application {
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			model = new MinesweeperModel(15, 10, 10);
+			model = new MinesweeperModel(STD_SIZE, STD_SIZE, 10);
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -188,7 +193,7 @@ public class MinesweeperView extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(15, 10, 20);
+				resetGame(STD_SIZE, STD_SIZE, 10);
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
@@ -199,6 +204,7 @@ public class MinesweeperView extends Application {
 		control = new MinesweeperController(model);
 		addStackPanes(board, rows, cols);
 		deleteSaveData();
+		stage.sizeToScene();
 	}
 	
 	private void deleteSaveData() {

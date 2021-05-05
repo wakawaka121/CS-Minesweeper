@@ -270,6 +270,7 @@ public class MinesweeperView extends Application {
 		}
 	}
 	
+	@Override
 	public void update(Observable o, Object arg) {
 		MinesweeperBoard board = (MinesweeperBoard) arg;
 		for (int i = 0; i < board.getCols(); i++) {

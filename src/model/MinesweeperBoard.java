@@ -32,7 +32,6 @@ public class MinesweeperBoard implements Serializable {
 		return cols;
 	}
 	
-
 	public int getMines() {
 		return mines;
 	}

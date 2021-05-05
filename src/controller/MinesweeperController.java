@@ -12,7 +12,9 @@ public class MinesweeperController {
 	private boolean gameOver;
 	private int mineCount;
 	private int flagCount;
+	
 	private int cellsHidden;
+	
 	private boolean gameWon;
 	
 	public MinesweeperController(MinesweeperModel model) {
@@ -70,10 +72,8 @@ public class MinesweeperController {
 		}
 		
 		refToBoard[row][col].setHidden();
-		cellsHidden--;
 		model.decCellsHidden();
 
-		
 		if(refToBoard[row][col].getMines() == 0) {
 			revealCells(row, col - 1);
 			revealCells(row, col + 1);
@@ -85,7 +85,7 @@ public class MinesweeperController {
 			revealCells(row + 1, col + 1);
 		}
 	}
-	
+
 	//should loop through bomb array and call setHidden() on all cells in the bomb array
 	// TODO set to private
 	public void showBombs() {
@@ -105,10 +105,12 @@ public class MinesweeperController {
 		if(gameOver) {
 			return true;
 		}
+		
 		if(model.getCellsHidden() != model.countOfMines()) {
 			return false;
 		}
 		gameWon = true;
 		return true;
 	}
+
 }

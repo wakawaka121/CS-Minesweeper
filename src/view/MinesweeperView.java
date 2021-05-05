@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Observable;
-import java.util.Observer;
 
 import controller.MinesweeperController;
 import javafx.animation.KeyFrame;
@@ -53,13 +52,11 @@ public class MinesweeperView extends Application {
 	private Text[][] texts;
 	private Circle[][] circles;
 	private StackPane[][] panes;
-
 	private GridPane board;
 	private BorderPane window;
-
 	private MinesweeperModel model;
 	private MinesweeperController control;
-
+	
 	private GridPane tDisplay;
 	private Label timer;
 	private Label highScore;
@@ -73,13 +70,14 @@ public class MinesweeperView extends Application {
 	private int currSec = 0;
 	private boolean gameRestart = false;
 
-
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Minesweeper");
-		model = new MinesweeperModel(15, 10, 10);
-		control = new MinesweeperController(model);
+		//model = new MinesweeperModel(15, 10, 10);
+		//control = new MinesweeperController(model);
 		
+		//stage.setTitle("Minesweeper");
+
 		loadFile();
 
 		BorderPane window = new BorderPane();
@@ -90,6 +88,7 @@ public class MinesweeperView extends Application {
 
 		EventHandler<MouseEvent> eventHandlerMouseClick = new EventHandler<MouseEvent>() {
 
+			@Override
 			public void handle(MouseEvent arg0) {
 				double x = arg0.getX() - 8;
 				double y = arg0.getY() - 8;
@@ -127,7 +126,7 @@ public class MinesweeperView extends Application {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setContentText(message);
 					alert.showAndWait();
-					stage.close();
+					deleteSaveData();
 				}
 			}
 
@@ -137,7 +136,6 @@ public class MinesweeperView extends Application {
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
 		addStackPanes(board, model.getRow(), model.getCol());
-		
 		tDisplay = new GridPane();
 		timer = new Label();
 		highScore = new Label();
@@ -146,8 +144,7 @@ public class MinesweeperView extends Application {
 		startTime(timer);
 		tDisplay.add(highScore, 4 , 0);
 		window.setBottom(tDisplay);
-		
-		
+		window.setBottom(timer);
 		Scene scene = new Scene(window);
 		EventHandler<WindowEvent> eventHandlerWindowClose = new EventHandler<WindowEvent>() {
 
@@ -191,7 +188,6 @@ public class MinesweeperView extends Application {
 			e.printStackTrace();
 		}
 	}
-	
 
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
@@ -204,8 +200,6 @@ public class MinesweeperView extends Application {
 			public void handle(ActionEvent arg0) {
 				gameRestart = true;
 				resetGame(15, 10, 20);
-				
-				
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);
@@ -227,8 +221,7 @@ public class MinesweeperView extends Application {
 			saveData.delete();
 		}
 	}
-
-
+	
 	private void addStackPanes(GridPane board, int rows, int cols) {
 		board.getChildren().clear();
 		panes = new StackPane[rows][cols];
@@ -276,7 +269,7 @@ public class MinesweeperView extends Application {
 			}
 		}
 	}
-
+	
 	public void update(Observable o, Object arg) {
 		MinesweeperBoard board = (MinesweeperBoard) arg;
 		for (int i = 0; i < board.getCols(); i++) {
@@ -361,3 +354,4 @@ public class MinesweeperView extends Application {
 	
 
 }
+

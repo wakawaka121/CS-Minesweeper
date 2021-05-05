@@ -14,6 +14,14 @@ public class MinesweeperModel {
 	private int mines;
 	private int cellsHidden;
 
+	private int[][] gameGrid;
+	private int[][] bombPlaced;
+	private int[][] bombMarked;
+	private int gridR;
+	private int gridC;
+	private int fClickRow;
+	private int fClickCol;
+	private int mark;
 
 	public MinesweeperModel() {
 		buildBoard(10, 10, 10); // Default board if no parameters are mentioned. (10 by 10

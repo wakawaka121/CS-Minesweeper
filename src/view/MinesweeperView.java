@@ -175,7 +175,7 @@ public class MinesweeperView extends Application {
 			fis.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			model = new MinesweeperModel(STD_SIZE, STD_SIZE, 10);
+			model = new MinesweeperModel(STD_SIZE, STD_SIZE, 20);
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -187,13 +187,13 @@ public class MinesweeperView extends Application {
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
 		menuBar.getMenus().add(menu);
-		MenuItem menuItem = new MenuItem("New 10x15 Game");
+		MenuItem menuItem = new MenuItem("New Game");
 		menu.getItems().add(menuItem);
 		EventHandler<ActionEvent> eventHandlerNewGame = new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(STD_SIZE, STD_SIZE, 10);
+				resetGame(STD_SIZE, STD_SIZE, 20);
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);

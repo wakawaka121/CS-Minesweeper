@@ -75,17 +75,10 @@ public class MinesweeperModel {
 		for (int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while (isMine(mineRow, mineCol) || (mineRow == row && mineCol == col)) {
 			while (currentLocations[mineRow][mineCol] == 1
 					|| !validBombLocation(mineRow, mineCol, row, col)) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
-			}
-			mineSweepBoard[mineRow][mineCol].setMine(true);
-			System.out.println("(" + Integer.toString(mineRow) + ","
-					+ Integer.toString(mineCol) + ")");
-			bombsArray.add(mineSweepBoard[mineRow][mineCol]);
-			updateAdjacentBombs(mineRow, mineCol);
 			}
 			currentLocations[mineRow][mineCol] = 1;
 			updateAdjacentCells(mineRow, mineCol, bombs);

@@ -108,7 +108,6 @@ public class MinesweeperView extends Application {
 					}
 					System.out.print(arg0.getButton());
 					
-					
 					System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
 					addStackPanes(board, model.getRow(), model.getCol());
 					
@@ -129,7 +128,6 @@ public class MinesweeperView extends Application {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setContentText(message);
 						alert.showAndWait();
-						//deleteSaveData();
 					}
 				}
 			}
@@ -146,9 +144,7 @@ public class MinesweeperView extends Application {
 		highScore.setTextFill(Color.BLACK);
 		highScore.setFont(Font.font(15));
 		startTime(timer);
-		//tDisplay.add(highScore, 4 , 0);
 		window.setBottom(tDisplay);
-		//window.setBottom(timer);
 		
 		Scene scene = new Scene(window);
 		EventHandler<WindowEvent> eventHandlerWindowClose = new EventHandler<WindowEvent>() {
@@ -156,19 +152,14 @@ public class MinesweeperView extends Application {
 			@Override
 			public void handle(WindowEvent arg0) {
 				try {
-					FileOutputStream fos = new FileOutputStream("save_game.dat");
-					ObjectOutputStream oos = new ObjectOutputStream(fos);
 					if(!control.isGameOver()) {
+						FileOutputStream fos = new FileOutputStream("save_game.dat");
+						ObjectOutputStream oos = new ObjectOutputStream(fos);
 						model.setTime(seconds);
 						oos.writeObject(model.getSerialized());
 						fos.close();
 						oos.close();
-					} else {
-						resetGame(model.getRow(), model.getCol(), model.getBombs().size());
-						oos.writeObject(model.getSerialized());
-						fos.close();
-						oos.close();
-					}
+					} 
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

@@ -29,6 +29,10 @@ public class MinesweeperCell implements Serializable {
 		mined = value;
 	}
 	
+	public void setAdjacentMines(int value) {
+		adjacentMines = value;
+	}
+	
 	public int getMines() {
 		return adjacentMines;
 	}

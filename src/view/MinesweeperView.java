@@ -231,14 +231,14 @@ public class MinesweeperView extends Application {
 		EventHandler<ActionEvent> eventHandlerOption2 = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(15, 15, 15);
+				resetGame(15, 15, 40);
 				
 			}	
 		};
 		EventHandler<ActionEvent> eventHandlerOption3 = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(20, 20, 20);
+				resetGame(20, 20, 80);
 				
 			}	
 		};

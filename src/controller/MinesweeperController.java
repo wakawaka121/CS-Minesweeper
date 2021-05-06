@@ -42,13 +42,14 @@ public class MinesweeperController {
 			if(model.getCellsHidden() == model.getRow() * model.getCol()) {
 				model.setBombs(row, col);
 				revealCells(row, col);
-			} else if(curMove.isMined()) {
-				gameOver = true;
-				showBombs();
-			}
-			else {
-				revealCells(row, col);
-			}
+			} 
+//			else if(curMove.isMined()) {
+//				gameOver = true;
+//				showBombs();
+//			}
+//			else {
+//				revealCells(row, col);
+//			}
 		}
 		
 		if(isGameOver()) {

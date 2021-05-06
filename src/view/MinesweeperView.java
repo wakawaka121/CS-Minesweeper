@@ -57,6 +57,7 @@ public class MinesweeperView extends Application {
 	private BorderPane window;
 	private Stage stage;
 
+
 	private MinesweeperModel model;
 	private MinesweeperController control;
 
@@ -72,7 +73,7 @@ public class MinesweeperView extends Application {
 		stage.setTitle("Minesweeper");
 
 		loadFile();
-
+		
 		window = new BorderPane();
 		board = new GridPane();
 		window.setCenter(board);
@@ -98,6 +99,7 @@ public class MinesweeperView extends Application {
 				
 				if(row >= 0 && col >= 0 &&  row < model.getRow() && col < model.getCol()) {
 					if(arg0.getButton().toString().equals("PRIMARY")) {
+						model.testSolveBoard();
 						control.playMove(row, col);
 					}
 					else if(arg0.getButton().toString().equals("SECONDARY")) {
@@ -105,7 +107,6 @@ public class MinesweeperView extends Application {
 					}
 				}
 				System.out.print(arg0.getButton());
-				
 				
 				System.out.println("(" + Integer.toString(row) +"," + Integer.toString(col) + ")");
 				addStackPanes(board, model.getRow(), model.getCol());
@@ -224,6 +225,7 @@ public class MinesweeperView extends Application {
 				StackPane pane = new StackPane();
 				panes[j][i] = pane;
 				MinesweeperCell cur = control.getCellClue(j, i);
+				cur = model.getCell(j, i);
 				pane.setPadding(new Insets(2));
 				pane.setBorder(
 						new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,

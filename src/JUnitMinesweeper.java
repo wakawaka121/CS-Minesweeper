@@ -1,3 +1,4 @@
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,8 +18,21 @@ class JUnitMinesweeper {
 		MinesweeperModel zeroArg = new MinesweeperModel();
 		MinesweeperModel threeArg = new MinesweeperModel(10,10,25);
 		MinesweeperController controller = new MinesweeperController(zeroArg);
-		MinesweeperBoard board = new MinesweeperBoard(10,10,5,5, new MinesweeperCell[10][10], new ArrayList<MinesweeperCell>());
+		MinesweeperBoard serialBoard = zeroArg.getSerialized();
+		MinesweeperBoard board = new MinesweeperBoard(10,10,5,5, new MinesweeperCell[10][10], new ArrayList<MinesweeperCell>(),new ArrayList<Integer>(),0);
 		controller.playMove(0, 0);
+		zeroArg.setTime(0);
+		assert(zeroArg.getTime() == 0);
+		zeroArg.setHighScore(new ArrayList<Integer>());
+		zeroArg.updateScores(11);
+		assert(zeroArg.getHighScore().size()== 1);
+		for(int i = 0; i < 10; i++) {
+			zeroArg.updateScores(i);
+		}
+		assert(zeroArg.getHighScore().size() == 10);
+		assert(zeroArg.getCell(0, 0) == serialBoard.getCell(0, 0));
+		System.out.println(controller.getHighScoreString());
+		
 	}
 	
 	@Test
@@ -61,6 +75,7 @@ class JUnitMinesweeper {
 		controller.showBombs();
 		controller.playMove(0, 0);
 		controller.isGameOver();	
+		controller.gameWon();
 	}
 	
 	@Test

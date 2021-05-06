@@ -16,7 +16,6 @@ public class MinesweeperController {
 	private int flagCount;
 	private int cellsHidden;
 	private boolean gameWon;
-	//private ArrayList<Integer> highScore;
 	
 	
 	public MinesweeperController(MinesweeperModel model) {
@@ -26,7 +25,6 @@ public class MinesweeperController {
 		gameWon = false;
 		cellsHidden = model.getRow() * model.getCol();
 		flagCount = 0;
-		//highScore = model.getHighScore();
 	}
 	
 	public boolean gameWon() {
@@ -58,9 +56,7 @@ public class MinesweeperController {
 			}
 		}
 		isGameOver();
-//		if(isGameOver()) {
-//			gameOver = true;
-//		}
+
 	}
 	
 	// Reveal all cells after a move is made.
@@ -89,8 +85,7 @@ public class MinesweeperController {
 		}
 	}
 
-	//should loop through bomb array and call setHidden() on all cells in the bomb array
-	// TODO set to private
+	
 	public void showBombs() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
 		for(int i=0; i<bombsArray.size(); i++) {
@@ -113,16 +108,6 @@ public class MinesweeperController {
 		} else {
 			return gameOver;
 		}
-//		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
-//		if(gameOver) {
-//			return true;
-//		}
-//		
-//		if(model.getCellsHidden() != model.countOfMines()) {
-//			return false;
-//		}
-//		gameWon = true;
-//		return true;
 	}
 	
 	public String getHighScoreString(){
@@ -140,14 +125,4 @@ public class MinesweeperController {
 		
 			
 	}
-	
-//	public void updateScores(int time) {
-//		if(highScore.size() == 10) {
-//			highScore.remove(Collections.min(highScore));
-//			highScore.add(time);
-//		} else {
-//			highScore.add(time);
-//		}
-//	}
-
 }

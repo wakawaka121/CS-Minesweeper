@@ -41,25 +41,25 @@ public class MinesweeperModel {
 	}
 	
 	public void setBombs(int row, int col) {
-		int[][] bombConfig;
+		ArrayList<int[][]> bombConfig;
 
 		do {
 			bombConfig = newBombConfig(row, col);
-		} while (!solveBoard(bombConfig, row, col));
+		} while (!solveBoard(bombConfig.get(0), row, col));
 
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
-				if (bombConfig[i][j] == -1) {
+				if (bombConfig.get(1)[i][j] == 1) {
 					mineSweepBoard[i][j].setMine(true);
 					bombsArray.add(mineSweepBoard[i][j]);
 				} else {
-					mineSweepBoard[i][j].setAdjacentMines(bombConfig[i][j]);
+					mineSweepBoard[i][j].setAdjacentMines(bombConfig.get(0)[i][j]);
 				}
 			}
 		}
 	}
 
-	private int[][] newBombConfig(int row, int col) {
+	private ArrayList<int[][]> newBombConfig(int row, int col) {
 		Random randRow = new Random();
 		Random randCol = new Random();
 		int[][] bombs = new int[rows][cols];
@@ -90,8 +90,10 @@ public class MinesweeperModel {
 			currentLocations[mineRow][mineCol] = 1;
 			updateAdjacentCells(mineRow, mineCol, bombs);
 		}
-
-		return bombs;
+		ArrayList<int[][]> bombData = new ArrayList<>();
+		bombData.add(bombs);
+		bombData.add(currentLocations);
+		return bombData;
 	}
 
 	private boolean validBombLocation(int mineRow, int mineCol, int row, int col) {

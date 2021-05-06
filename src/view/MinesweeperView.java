@@ -60,7 +60,7 @@ public class MinesweeperView extends Application {
 	private GridPane board;
 	private BorderPane window;
 	private Stage stage;
-	
+
 	private MinesweeperModel model;
 	private MinesweeperController control;
 	
@@ -139,7 +139,7 @@ public class MinesweeperView extends Application {
 		window.setTop(menuBar);
 		createMenuItems(menuBar);
 		addStackPanes(board, model.getRow(), model.getCol());
-		
+
 		tDisplay = new GridPane();
 		timer = new Label();
 		highScore = new Label();
@@ -160,8 +160,6 @@ public class MinesweeperView extends Application {
 					ObjectOutputStream oos = new ObjectOutputStream(fos);
 					if(!control.isGameOver()) {
 						model.setTime(seconds);
-//						FileOutputStream fos = new FileOutputStream("save_game.dat");
-//						ObjectOutputStream oos = new ObjectOutputStream(fos);
 						oos.writeObject(model.getSerialized());
 						fos.close();
 						oos.close();
@@ -171,17 +169,9 @@ public class MinesweeperView extends Application {
 						fos.close();
 						oos.close();
 					}
-//					model.setTime(seconds);
-//					FileOutputStream fos = new FileOutputStream("save_game.dat");
-//					ObjectOutputStream oos = new ObjectOutputStream(fos);
-//					oos.writeObject(model.getSerialized());
-//					fos.close();
-//					oos.close();
 				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -202,15 +192,14 @@ public class MinesweeperView extends Application {
 			ois.close();
 			fis.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			model = new MinesweeperModel();
 			model.setHighScore(new ArrayList<Integer>());
 			control = new MinesweeperController(model);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
@@ -286,8 +275,6 @@ public class MinesweeperView extends Application {
 							custom.showAndWait();
 						}
 						break;
-						//Integer.valueOf(custom.getEditor().getText());
-						
 					}catch  (NumberFormatException e) {
 						custom.setHeaderText("Entry Must Be Integer");
 						custom.showAndWait();
@@ -336,6 +323,7 @@ public class MinesweeperView extends Application {
 				StackPane pane = new StackPane();
 				panes[j][i] = pane;
 				MinesweeperCell cur = control.getCellClue(j, i);
+				cur = model.getCell(j, i);
 				pane.setPadding(new Insets(2));
 				pane.setBorder(
 						new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID,
@@ -374,35 +362,6 @@ public class MinesweeperView extends Application {
 		}
 	}
 	
-	
-//	public void update(Observable o, Object arg) {
-//		MinesweeperBoard board = (MinesweeperBoard) arg;
-//		for (int i = 0; i < board.getCols(); i++) {
-//			for (int j = 0; j < board.getRows(); j++) {
-//				MinesweeperCell cur = board.getCell(j, i);
-//				StackPane pane = panes[i][j];
-//				Circle circle = circles[i][j];
-//				Text text = texts[i][j];
-//				if (cur.isHidden()) {
-//					pane.setBackground(new Background(
-//							new BackgroundFill(Color.DARKGREY, null, null)));
-//					circle.setFill(Color.TRANSPARENT);
-//				} else {
-//					pane.setBackground(
-//							new Background(new BackgroundFill(Color.GRAY, null, null)));
-//					if (cur.isFlagged()) {
-//						circle.setFill(Color.RED);
-//					} else if (cur.isMined()) {
-//						circle.setFill(Color.BLACK);
-//					} else {
-//						text.setText(String.valueOf(cur.getMines()));
-//						circle.setFill(Color.TRANSPARENT);
-//					}
-//				}
-//			}
-//		}
-//	}
-
 	private void startTime(Label timer) {
 		timer.setTextFill(Color.BLUE);
 		timer.setFont(Font.font(15));
@@ -424,6 +383,6 @@ public class MinesweeperView extends Application {
 		solveTime.playFromStart();
 	}
 	
-
 }
+
 

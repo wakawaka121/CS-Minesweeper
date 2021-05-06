@@ -12,6 +12,11 @@ import model.MinesweeperBoard;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
 
+/**
+ * Test cases for the minesweeper
+ * @author Chris Lin, Sarthak Bawal, Derek Tominaga, Jesse Gomez
+ *
+ */
 class JUnitMinesweeper {
 
 	@Test

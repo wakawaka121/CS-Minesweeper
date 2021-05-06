@@ -50,6 +50,13 @@ import model.MinesweeperBoard;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
 
+/**
+ * 
+ * @author Chris Lin, Sarthak Bawal, Derek Tominaga, Jesse Gomez
+ * 
+ * This class is the view of the whole program, which handles everything to be visualize in GUI
+ *
+ */
 @SuppressWarnings("deprecation")
 public class MinesweeperView extends Application {
 	private static final int DEFAULT_SIZE = 10;
@@ -71,6 +78,9 @@ public class MinesweeperView extends Application {
 	private Integer seconds = 0;
 
 
+	/**
+	 * set up the stage for the view
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
@@ -172,6 +182,10 @@ public class MinesweeperView extends Application {
 		stage.show();
 	}
 	
+	/**
+	 * load the data from the last time
+	 * @throws ClassNotFoundException
+	 */
 	private void loadFile() throws ClassNotFoundException {
 		try {
 			FileInputStream fis = new FileInputStream("save_game.dat");
@@ -191,7 +205,10 @@ public class MinesweeperView extends Application {
 		}
 	}
 
-
+	/**
+	 * generate a menu bar for new game
+	 * @param menuBar the menu bar
+	 */
 	private void createMenuItems(MenuBar menuBar) {
 		Menu menu = new Menu("File");
 		menuBar.getMenus().add(menu);
@@ -282,7 +299,12 @@ public class MinesweeperView extends Application {
 		
 	}
 	
-	
+	/**
+	 * Reset the whole game when the game restart
+	 * @param rows int row
+	 * @param cols int column
+	 * @param mines int number of mines
+	 */
 	private void resetGame(int rows, int cols, int mines) {
 		ArrayList<Integer> scores = model.getHighScore();
 		model = new MinesweeperModel(rows, cols, mines);
@@ -297,6 +319,9 @@ public class MinesweeperView extends Application {
 		stage.sizeToScene();
 	}
 	
+	/**
+	 * delete the saved data
+	 */
 	private void deleteSaveData() {
 		File saveData = new File("save_game.dat");
 		if (saveData.exists()) {
@@ -304,6 +329,12 @@ public class MinesweeperView extends Application {
 		}
 	}
 	
+	/**
+	 * Add the cells to the board, setting up the board
+	 * @param board GridPane the game board
+	 * @param rows int row
+	 * @param cols int column
+	 */
 	private void addStackPanes(GridPane board, int rows, int cols) {
 		board.getChildren().clear();
 		panes = new StackPane[rows][cols];
@@ -353,6 +384,10 @@ public class MinesweeperView extends Application {
 		}
 	}
 	
+	/**
+	 * start the timer
+	 * @param timer Label the time passed
+	 */
 	private void startTime(Label timer) {
 		timer.setTextFill(Color.BLUE);
 		timer.setFont(Font.font(15));
@@ -362,6 +397,9 @@ public class MinesweeperView extends Application {
 		
 	}
 	
+	/**
+	 * set up the timer, and show it on the GUI
+	 */
 	private void start() {
 		solveTime.setCycleCount(Timeline.INDEFINITE);
 		KeyFrame frame = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {

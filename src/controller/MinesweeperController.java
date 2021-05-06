@@ -7,6 +7,14 @@ import jdk.jfr.Timespan;
 import model.MinesweeperCell;
 import model.MinesweeperModel;
 
+/**
+ * 
+ * @author Chris Lin, Sarthak Bawal, Derek Tominaga, Jesse Gomez
+ * 
+ * This class is the controller of the Minesweeper. It contains the method we need for the playing the game
+ * and any function we need during the game.
+ *
+ */
 public class MinesweeperController {
 	
 	private MinesweeperModel model;
@@ -17,7 +25,10 @@ public class MinesweeperController {
 	private int cellsHidden;
 	private boolean gameWon;
 	
-	
+	/**
+	 * initialize variables
+	 * @param model MinesweeperModel the model class
+	 */
 	public MinesweeperController(MinesweeperModel model) {
 		this.model = model;
 		refToBoard = model.getBoard();
@@ -27,10 +38,20 @@ public class MinesweeperController {
 		flagCount = 0;
 	}
 	
+	/**
+	 * check if we have won the game and store the winning time
+	 * @param timeInSeconds int the playing time
+	 * @return true or false
+	 */
 	public boolean gameWon() {
 		return gameWon;
 	}
 	
+	/**
+	 * flag or unflag a cell on the board and reduce or add the flag count
+	 * @param row int row
+	 * @param col int column
+	 */
 	public void flagCell(int row, int col) {
 		MinesweeperCell curCell = refToBoard[row][col];
 		curCell.setFlagged();
@@ -41,6 +62,11 @@ public class MinesweeperController {
 		}
 	}
 	
+	/**
+	 * the method for player move
+	 * @param row int row
+	 * @param col int column
+	 */
 	public void playMove(int row, int col) {
 		MinesweeperCell  curMove = refToBoard[row][col];
 		if(curMove.isHidden() && !curMove.isFlagged() && !gameOver) {
@@ -60,6 +86,11 @@ public class MinesweeperController {
 
 	}
 	
+	/**
+	 * Reveal all cells after a move is made.
+	 * @param row int row 
+	 * @param col int column
+	 */
 	// Reveal all cells after a move is made.
 	// If a cells has 0 mines around it, it will recursively reveal all cells until it stops.
 	private void revealCells(int row, int col) {
@@ -86,7 +117,9 @@ public class MinesweeperController {
 		}
 	}
 
-	
+	/**
+	 * Show all the bombs 
+	 */
 	public void showBombs() {
 		ArrayList<MinesweeperCell> bombsArray = model.getBombs();
 		for(int i=0; i<bombsArray.size(); i++) {
@@ -94,11 +127,21 @@ public class MinesweeperController {
 		}
 	}
 	
+	/**
+	 * return the cell object
+	 * @param row int row
+	 * @param col int column
+	 * @return the cell object
+	 */
 	public MinesweeperCell getCellClue(int row, int col) {
 		return refToBoard[row][col];
 		
 	}
 	
+	/**
+	 * Check if the game is over
+	 * @return true or false
+	 */
 	public boolean isGameOver() {
 		if(model.getCellsHidden() == model.countOfMines()) {
 			gameOver = true;
@@ -111,6 +154,10 @@ public class MinesweeperController {
 		}
 	}
 	
+	/**
+	 * the String representation of high score
+	 * @return the String representation of high score
+	 */
 	public String getHighScoreString(){
 		ArrayList<Integer> highScore = model.getHighScore();
 		String highScoreString = "";

@@ -99,7 +99,6 @@ public class MinesweeperView extends Application {
 				
 				if(row >= 0 && col >= 0 &&  row < model.getRow() && col < model.getCol()) {
 					if(arg0.getButton().toString().equals("PRIMARY")) {
-						model.testSolveBoard();
 						control.playMove(row, col);
 					}
 					else if(arg0.getButton().toString().equals("SECONDARY")) {
@@ -194,7 +193,7 @@ public class MinesweeperView extends Application {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				resetGame(STD_SIZE, STD_SIZE, 20);
+				resetGame(15, 15, 20);
 			}
 		};
 		menuItem.addEventHandler(ActionEvent.ANY, eventHandlerNewGame);

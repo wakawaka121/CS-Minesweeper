@@ -22,7 +22,6 @@ public class MinesweeperModel {
 	private int fClickRow;
 	private int fClickCol;
 	private int mark;
-	public int[][] bombs, board; //remove after testing
 
 	public MinesweeperModel() {
 		buildBoard(10, 10, 10); // Default board if no parameters are mentioned. (10 by 10
@@ -36,7 +35,6 @@ public class MinesweeperModel {
 	private void buildBoard(int rows, int cols, int mines) {
 		this.rows = rows;
 		this.cols = cols;
-		board = new int[rows][cols];//remove
 		this.mines = mines;
 		cellsHidden = rows * cols;
 		bombsArray = new ArrayList<MinesweeperCell>();
@@ -50,200 +48,167 @@ public class MinesweeperModel {
 
 	public void setBombs(int row, int col) {
 		int[][] bombConfig;
-		
+
 		do {
 			bombConfig = newBombConfig(row, col);
-			break;//ensure 1 move
-		} while(!solveBoard(bombConfig));
-		
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<cols; j++) {
-				if(bombConfig[i][j] == -1) {
+		} while (!solveBoard(bombConfig, row, col));
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (bombConfig[i][j] == -1) {
 					mineSweepBoard[i][j].setMine(true);
 					bombsArray.add(mineSweepBoard[i][j]);
-				}
-				else {
+				} else {
 					mineSweepBoard[i][j].setAdjacentMines(bombConfig[i][j]);
 				}
 			}
 		}
-		
-		bombs = bombConfig;
-		
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<cols; j++) {
-				if(mineSweepBoard[i][j].isHidden()) {
-					board[i][j] = -1;
-				}
-				else {
-					board[i][j] = mineSweepBoard[i][j].getMines();
-				}
-			}
-		}
 	}
-	
+
 	private int[][] newBombConfig(int row, int col) {
 		Random randRow = new Random();
 		Random randCol = new Random();
 		int[][] bombs = new int[rows][cols];
-		
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<cols; j++) {
+		int[][] currentLocations = new int[rows][cols];
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
 				bombs[i][j] = 0;
+				currentLocations[i][j] = 0;
 			}
 		}
-		
+
 		for (int mine = 0; mine < mines; mine++) {
 			int mineRow = randRow.nextInt(rows);
 			int mineCol = randCol.nextInt(cols);
-			while (bombs[mineRow][mineCol] == -1 || !validBombLocation(mineRow, mineCol, row, col)) {
+			while (currentLocations[mineRow][mineCol] == 1
+					|| !validBombLocation(mineRow, mineCol, row, col)) {
 				mineRow = randRow.nextInt(rows);
 				mineCol = randCol.nextInt(cols);
 			}
-			bombs[mineRow][mineCol] = -1;
+			currentLocations[mineRow][mineCol] = 1;
 			updateAdjacentCells(mineRow, mineCol, bombs);
-			
 		}
-		
+
 		return bombs;
 	}
-	
+
 	private boolean validBombLocation(int mineRow, int mineCol, int row, int col) {
 		return (Math.abs(mineRow - row) > 1 && Math.abs(mineCol - col) > 1);
 	}
-	
-	public boolean testSolveBoard() {
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<cols; j++) {
-				if(mineSweepBoard[i][j].isHidden()) {
-					board[i][j] = -1;
-				} else if(mineSweepBoard[i][j].isFlagged()) {
-					board[i][j] = -2;
-				} else {
-					board[i][j] = mineSweepBoard[i][j].getMines();
-				}
-			}
-		}
-		System.out.println("Entered solve board");
-		int[] ref;
-		
-		for(int k=1; k<=8; k++) {
-			for(int i=0; i<rows; i++) {
-				for(int j=0; j<cols; j++) {
-					if(board[i][j] == k) {
-						ref = countValidNeighbors(board, i, j);
 
-						System.out.print("(" + Integer.toString(i) +"," + Integer.toString(j) + ") =>");
-						System.out.println("(" + Integer.toString(ref[0]) +"," + Integer.toString(ref[1]) + ")");
-						if(ref[1] == k) {
-							flagNeighbors(board, i, j);
-						}
-						
-						if(ref[0] == k && ref[1] > k) {
-							playMove(board, i, j, bombs);
-							return false; // ensure one move
-						}
-					}
-				}
-			}
-		}
-		
-		return true;
-	}
-	
-	private boolean solveBoard(int[][] bombs) {
-		int[][] board = new int[rows][cols];
+	private boolean solveBoard(int[][] bombs, int row, int col) {
+		MinesweeperCell[][] board = new MinesweeperCell[rows][cols];
 		int[] ref;
-		
-		for(int i=0; i<rows; i++) {
-			for(int j=0; j<cols; j++) {
-				board[i][j] = -1;
+
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				board[i][j] = new MinesweeperCell(i, j);
+				board[i][j].setAdjacentMines(bombs[i][j]);
+				if (i == row && j == col) {
+					board[i][j].setHidden();
+				}
 			}
 		}
-		
-		for(int k=1; k<=8; k++) {
-			for(int i=0; i<rows; i++) {
-				for(int j=0; j<cols; j++) {
-					if(board[i][j] == k) {
+		boolean modifiedCell = false;
+		int totalMods = 0;
+		while (true) {
+			for (int i = 0; i < rows; i++) {
+				for (int j = 0; j < cols; j++) {
+					if (!board[i][j].isHidden() && !board[i][j].isFlagged()) {
 						ref = countValidNeighbors(board, i, j);
-						if(ref[1] == k) {
-							flagNeighbors(board, i, j);
-						} else if(ref[0] == k && ref[1] > k) {
-							playMove(board, i, j, bombs);
+						if (ref[1] == board[i][j].getMines() && ref[0] != board[i][j].getMines() && board[i][j].getMines() > 0) {
+							totalMods = totalMods + flagNeighbors(board, i, j);
+							modifiedCell = true;
+						} else if (ref[0] == board[i][j].getMines() && ref[1] > board[i][j].getMines()) {
+							totalMods = totalMods + playMove(board, i, j, bombs);
+							modifiedCell = true;
 						}
 					}
 				}
 			}
+			if (modifiedCell == false) {
+				break;
+			}
+			modifiedCell = false;
 		}
-		
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				if (board[i][j].isHidden() && !board[i][j].isFlagged()) {
+					return false;
+				}
+			}
+		}
 		return true;
 	}
-	
-	private void playMove(int[][] board, int row, int col, int[][] bombs) {
-		for(int i=row-1; i<=row+1; i++) {
-			for(int j=col-1; j<=col+1; j++) {
-				if(i == row && j == col) {
+
+	private int playMove(MinesweeperCell[][] board, int row, int col, int[][] bombs) {
+		int modified = 0;
+		for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+				if (i == row && j == col) {
 					continue;
 				}
-				
-				if(validIndex(i, j)) {
-					if(board[i][j] == -1) {
-						board[i][j] = bombs[i][j];
-						mineSweepBoard[i][j].setHidden();
-						return;//ensure one move;
+
+				if (validIndex(i, j)) {
+					if (board[i][j].isHidden() && !board[i][j].isFlagged()) {
+						modified++;
+						board[i][j].setHidden();
 					}
 				}
 			}
 		}
+		return modified;
 	}
-	
-	private void flagNeighbors(int[][] board, int row, int col) {
-		for(int i=row-1; i<=row+1; i++) {
-			for(int j=col-1; j<=col+1; j++) {
-				if(i == row && j == col) {
+
+	private int flagNeighbors(MinesweeperCell[][] board, int row, int col) {
+		int modified = 0;
+		for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+				if (i == row && j == col) {
 					continue;
 				}
-				
-				if(validIndex(i, j)) {
-					if(!mineSweepBoard[i][j].isFlagged()) {
-						board[i][j] = -2;
-						mineSweepBoard[i][j].setFlagged();
-						return;
+
+				if (validIndex(i, j)) {
+					if (board[i][j].isHidden() && !board[i][j].isFlagged()) {
+						modified++;
+						board[i][j].setFlagged();
 					}
 				}
 			}
 		}
+		return modified;
 	}
-	
-	private int[] countValidNeighbors(int[][] board, int row, int col) {
+
+	private int[] countValidNeighbors(MinesweeperCell[][] board, int row, int col) {
 		int[] ret = new int[2];
-		
-		ret[0] = 0;
-		ret[1] = 0;
-		
-		for(int i=row-1; i<=row+1; i++) {
-			for(int j=col-1; j<=col+1; j++) {
-				if(i == row && j == col) {
+
+		ret[0] = 0; // Number of surrounding flagged cells
+		ret[1] = 0;	// Number of surrounding hidden cells
+
+		for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+				if (i == row && j == col) {
 					continue;
 				}
-				
-				if(validIndex(i, j)) {
-					if(board[i][j] < 0) {
+
+				if (validIndex(i, j)) {
+					if (board[i][j].isHidden()) {
 						ret[1]++;
 					}
-					
-					if(board[i][j] == -2) {
+
+					if (board[i][j].isFlagged()) {
 						ret[0]++;
 					}
 				}
 			}
 		}
-		
+
 		return ret;
 	}
-	
+
 	private boolean validIndex(int row, int col) {
-		return (row >= 0 && col >=0 && row < rows && col < cols);
+		return (row >= 0 && col >= 0 && row < rows && col < cols);
 	}
 
 	public ArrayList<MinesweeperCell> getBombs() {
@@ -260,13 +225,13 @@ public class MinesweeperModel {
 	}
 
 	private void updateAdjacentCells(int row, int col, int[][] bombs) {
-		for(int i=row-1; i<=row+1; i++) {
-			for(int j=col-1; j<=col+1; j++) {
-				if(i == row && j == col) {
+		for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+				if (i == row && j == col) {
 					continue;
 				}
-				
-				if(validIndex(i, j)) {
+
+				if (validIndex(i, j)) {
 					bombs[i][j]++;
 				}
 			}
@@ -274,13 +239,13 @@ public class MinesweeperModel {
 	}
 
 	private void updateAdjacentBombs(int row, int col) {
-		for(int i=row-1; i<=row+1; i++) {
-			for(int j=col-1; j<=col+1; j++) {
-				if(i == row && j == col) {
+		for (int i = row - 1; i <= row + 1; i++) {
+			for (int j = col - 1; j <= col + 1; j++) {
+				if (i == row && j == col) {
 					continue;
 				}
-				
-				if(validIndex(i, j)) {
+
+				if (validIndex(i, j)) {
 					mineSweepBoard[i][j].increaseMines();
 				}
 			}
@@ -316,7 +281,7 @@ public class MinesweeperModel {
 	public int getCellsHidden() {
 		return cellsHidden;
 	}
-	
+
 	public void decCellsHidden() {
 		cellsHidden--;
 	}
